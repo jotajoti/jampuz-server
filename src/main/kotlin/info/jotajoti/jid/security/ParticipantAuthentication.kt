@@ -1,6 +1,5 @@
 package info.jotajoti.jid.security
 
-import info.jotajoti.jid.admin.Admin
 import info.jotajoti.jid.participant.Participant
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
