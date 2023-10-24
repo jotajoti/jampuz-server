@@ -1,0 +1,25 @@
+package info.jotajoti.jid.admin
+
+import info.jotajoti.jid.security.SecurityService
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.stereotype.Controller
+
+@Controller
+class AdminController(
+    private val adminRepository: AdminRepository,
+    private val securityService: SecurityService,
+) {
+
+    @MutationMapping
+    fun createAdmin(@Argument input: CreateAdminInput): Admin {
+
+        val admin = Admin(
+            name = input.name,
+            email = input.email,
+            passwordHash = securityService.hashPassword(input.password),
+        )
+
+        return adminRepository.save(admin)
+    }
+}

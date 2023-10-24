@@ -1,0 +1,33 @@
+enum Region {
+    AFRICA
+    ARAB
+    ASIA_PACIFIC
+    EUROASIA
+    EUROPE
+    INTERAMERICA
+    SPECIAL
+}
+
+type JidCode {
+    value: String!
+    region: Region!
+    # A lowercase [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code
+    country: String!
+}
+
+type JidCodeStats {
+    count: Int!
+    uniqueCount: Int!
+    uniqueCountryCount: Int!
+    uniqueCountries: [String!]!
+    uniqueRegionCount: Int!
+    uniqueRegions: [Region!]!
+}
+
+extend type Participant {
+    jidCodeStats: JidCodeStats!
+}
+
+extend type Subscription {
+    jidCodeStats(locationId: ID!): JidCodeStats
+}

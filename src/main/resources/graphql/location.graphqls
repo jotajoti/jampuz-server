@@ -1,0 +1,23 @@
+type Location {
+    id: ID!
+    name: String!
+    code: JidCode!
+    year: Int!
+    owners: [Admin!]
+}
+
+input CreateLocationInput {
+    name: String!
+    code: String!
+    year: Int!
+}
+
+extend type Viewer {
+    locations: [Location!]
+    locationById(locationId: ID!): Location
+    locationByCode(code: String!): Location
+}
+
+extend type Mutation {
+    createLocation(input: CreateLocationInput!): Location
+}

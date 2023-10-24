@@ -1,0 +1,8 @@
+extend type Query {
+    viewer: Viewer
+}
+
+type Viewer {
+    admin: Admin
+    participant: Participant
+}

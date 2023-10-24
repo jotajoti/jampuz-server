@@ -1,0 +1,16 @@
+type Admin {
+    id: ID!
+    name: String!
+    email: String!
+}
+
+input CreateAdmin {
+    name: String!
+    email: String!
+    password: String!
+}
+
+extend type Mutation {
+    authenticateAdmin(email: String!, password: String!): String
+    createAdmin(input: CreateAdmin!): Admin!
+}

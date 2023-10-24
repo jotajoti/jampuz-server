@@ -1,0 +1,18 @@
+type Participant {
+    id: ID!
+    name: String!
+    # If not null, means this participant is linked to the Admin user so the admin also can act as participant.
+    admin: Admin
+    location: Location!
+    foundJidCodes: [FoundJidCode!]
+}
+
+type FoundJidCode {
+    id: ID!
+    code: JidCode!
+    participant: Participant!
+}
+
+extend type Location {
+    participants: [Participant!]
+}

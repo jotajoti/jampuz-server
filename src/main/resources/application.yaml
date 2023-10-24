@@ -1,0 +1,31 @@
+spring:
+  graphql:
+    cors:
+      allowed-origins: "*"
+    graphiql:
+      enabled: true
+    websocket:
+      path: "/graphql-ws"
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog.yaml
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: false
+        order_inserts: true
+        jdbc:
+          batch_size: 50
+
+jwt:
+  sharedSecret: change-me
+
+password:
+  salt: $2a$09$/hJXJVlOfryvAa2s2ifKw.yei76MTsHlWCF0wqHkbUZ34rOZ0jtwy
+
+samples:
+  jid-codes: 500
+  locations: 2
+  max-found-jid-codes-per-participant: 25
+  participants-per-location: 60
+  users: 10

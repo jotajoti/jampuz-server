@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - include:
+      relativeToChangelogFile: true
+      file: 1-create-admin-table.sql
+  - include:
+      relativeToChangelogFile: true
+      file: 2-create-location-table.sql
+  - include:
+      relativeToChangelogFile: true
+      file: 3-create-location_owner-table.sql
+  - include:
+      relativeToChangelogFile: true
+      file: 4-create-participant-table.sql
+  - include:
+      relativeToChangelogFile: true
+      file: 5-create-found_jid_code-table.sql

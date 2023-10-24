@@ -1,0 +1,9 @@
+scalar Date @specifiedBy(url: "https://tools.ietf.org/html/rfc3339")
+
+type Mutation {
+    ping: String
+}
+
+type Subscription {
+    dummy: String
+}
