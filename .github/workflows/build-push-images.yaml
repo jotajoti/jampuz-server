@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         builder:
-          - ashaun/builder-arm:base
+          - dashaun/builder-arm:base
           - paketobuildpacks/builder:base
 
     steps:
