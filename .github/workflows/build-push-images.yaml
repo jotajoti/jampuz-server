@@ -30,7 +30,7 @@ jobs:
         run: mvn -B -Pnative spring-boot:build-image --file pom.xml
 
   build-arm64:
-    runs-on: macos-13-arm64
+    runs-on: macos-13-xlarge
 
     steps:
       - uses: actions/checkout@v3
