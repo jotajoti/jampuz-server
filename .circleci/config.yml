@@ -23,12 +23,42 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - checkout
-      - run: ./mvnw -B -Pnative spring-boot:build-image
+      - run: ./mvnw -B -Pnative -Dspring-boot.build-image.imageName=ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-<< matrix.platform >> spring-boot:build-image
+      - run:
+          name: Save image as tar
+          command: |
+            mkdir -p images
+            docker image save -o "images/jid-server-spring_$CIRCLE_SHA1-<< matrix.platform >>" "ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-<< matrix.platform >>"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+  push-images:
+    executor: amd64
+    steps:
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Load images
+          command: |
+            docker image load < "images/jid-server-spring_$CIRCLE_SHA1-amd64"
+            docker image load < "images/jid-server-spring_$CIRCLE_SHA1-arm64"
+      - run:
+          name: Authenticate ghcr
+          commmand: echo $GITHUB_TOKEN | docker login ghcr.io -u jotajoti --password-stdin
+      - run:
+          name: Build and push multi-arch image
+          command: docker buildx imagetools create --tag=ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1 ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-arm64 ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-amd64
 
 workflows:
-  build-all:
+  build-and-push:
     jobs:
       - build:
           matrix:
             parameters:
               platform: [ amd64, arm64 ]
+      - push-images:
+          requires:
+            - build
