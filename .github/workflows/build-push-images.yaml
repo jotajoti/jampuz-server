@@ -39,4 +39,4 @@ jobs:
           distribution: liberica
 
       - name: Build native image
-        run: mvn -B -Pnative spring-boot:boot-image --file pom.xml
+        run: mvn -B -Pnative spring-boot:build-image --file pom.xml
