@@ -2,13 +2,33 @@
 
 version: 2.1
 
-jobs:
-  build:
+executors:
+  amd64:
     docker:
       - image: cimg/openjdk:17.0.8
-    resource_class: arm.medium
+    resource_class: large
+  arm64:
+    docker:
+      - image: cimg/openjdk:17.0.8
+    resource_class: arm.large
+
+
+jobs:
+  build:
+    parameters:
+      platform:
+        type: executor
+    executor: << parameters.platform >>
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
       - checkout
       - run: ./mvnw -B -Pnative spring-boot:build-image
+
+workflows:
+  build-all:
+    jobs:
+      - build:
+          matrix:
+            parameters:
+              platform: [ amd64, arm64 ]
