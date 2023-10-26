@@ -41,7 +41,8 @@ jobs:
           command: echo $GITHUB_TOKEN | docker login ghcr.io -u jotajoti --password-stdin
       - run:
           name: Build and push multi-arch image
-          command: |docker buildx imagetools create --tag=ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1 ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-aarch64 ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-x86_64
+          command: |
+            docker buildx imagetools create --tag=ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1 ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-aarch64 ghcr.io/jotajoti/jid-server-spring:$CIRCLE_SHA1-x86_64
 
 workflows:
   build-and-push:
