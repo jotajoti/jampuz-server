@@ -10,17 +10,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - arm64
-          - amd64
+        builder:
+          - ashaun/builder-arm:base
+          - paketobuildpacks/builder:base
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-        with:
-          platforms: ${{ matrix.platform }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -39,4 +37,4 @@ jobs:
           distribution: liberica
 
       - name: Build native image
-        run: mvn -B -Pnative spring-boot:build-image --file pom.xml
+        run: mvn -B -Dspring-boot.build-image.builder=${{ matrix.builder }} -Pnative spring-boot:build-image --file pom.xml
