@@ -35,7 +35,7 @@ jobs:
           paths:
             - images
   push-images:
-    executor: amd64
+    executor: x86_64
     steps:
       - attach_workspace:
           at: .
