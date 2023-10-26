@@ -15,7 +15,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/jotajoti/jid-server-spring
-          tags: type=semver,pattern={{version}}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
