@@ -1,6 +1,7 @@
 package info.jotajoti.jid.test
 
 import info.jotajoti.jid.admin.Admin
+import info.jotajoti.jid.admin.AdminId
 import info.jotajoti.jid.admin.AdminRepository
 import info.jotajoti.jid.dev.SampleProperties
 import info.jotajoti.jid.participant.ParticipantId
@@ -71,10 +72,10 @@ abstract class GraphQLIntegrationTests {
     fun executeQuery(@Language("GraphQL") graphQlString: String) =
         graphQlTester.executeQuery(graphQlString)
 
-    fun executeAdminQuery(@Language("GraphQL") graphQlString: String) =
+    fun executeAdminQuery(@Language("GraphQL") graphQlString: String, adminId: AdminId = testAdmins[0].id!!) =
         graphQlTester
             .mutate()
-            .header("Authorization", "Bearer ${jwtService.createToken(Subject(ADMIN, testAdmins[0].id!!))}")
+            .header("Authorization", "Bearer ${jwtService.createToken(Subject(ADMIN, adminId))}")
             .build()
             .executeQuery(graphQlString)
 

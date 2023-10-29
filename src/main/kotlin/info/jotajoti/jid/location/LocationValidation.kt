@@ -1,6 +1,5 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.jidcode.ValidJidCodeValidator
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
