@@ -28,6 +28,10 @@ extend type Participant {
     jidCodeStats: JidCodeStats!
 }
 
+extend type Location {
+    jidCodeStats: JidCodeStats!
+}
+
 extend type Subscription {
     jidCodeStats(locationId: ID!): JidCodeStats
 }

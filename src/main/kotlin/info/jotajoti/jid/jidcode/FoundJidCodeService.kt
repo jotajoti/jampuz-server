@@ -4,6 +4,7 @@ import info.jotajoti.jid.location.LocationId
 import info.jotajoti.jid.participant.ParticipantService
 import info.jotajoti.jid.security.AdminAuthentication
 import info.jotajoti.jid.security.ParticipantAuthentication
+import info.jotajoti.jid.subscription.SubscriptionService
 import org.springframework.data.domain.Example
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service
 class FoundJidCodeService(
     private val foundJidCodeRepository: FoundJidCodeRepository,
     private val participantService: ParticipantService,
+    private val subscriptionService: SubscriptionService,
 ) {
 
     fun createFoundJidCode(input: RegisterFoundJidCodeInput, authentication: Authentication): FoundJidCode {
@@ -24,7 +26,11 @@ class FoundJidCodeService(
 
         foundJidCode.ensureNotAlreadyRegistered()
 
-        return foundJidCodeRepository.save(foundJidCode)
+        val savedJidCode = foundJidCodeRepository.save(foundJidCode)
+
+        subscriptionService.publishMessage(JidCodeStatsSubscription(input.locationId))
+
+        return savedJidCode
     }
 
     private fun Authentication.getParticipant(locationId: LocationId) = when (this) {

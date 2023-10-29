@@ -1,70 +1,39 @@
 package info.jotajoti.jid.jidcode
 
 import info.jotajoti.jid.location.Location
+import info.jotajoti.jid.location.LocationId
 import info.jotajoti.jid.participant.Participant
+import info.jotajoti.jid.subscription.SubscriptionService
 import org.dataloader.DataLoader
+import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.SchemaMapping
-import org.springframework.graphql.execution.BatchLoaderRegistry
+import org.springframework.graphql.data.method.annotation.SubscriptionMapping
 import org.springframework.stereotype.Controller
-import reactor.core.publisher.Mono
 import java.util.concurrent.CompletableFuture
 
 
 @Controller
 class FoundJidCodeStatsController(
     private val foundJidCodeRepository: FoundJidCodeRepository,
-    batchLoaderRegistry: BatchLoaderRegistry,
+    private val subscriptionService: SubscriptionService,
 ) {
 
-    init {
-        batchLoaderRegistry
-            .forName<Participant, MutableList<JidCode>>("jidCodesForParticipantsLoader")
-            .withOptions {
-                it.setMaxBatchSize(100)
-            }
-            .registerMappedBatchLoader { participants, _ ->
-                val participantLookupMap = participants.associateBy { it.id }
-                val jidCodesForParticipants = mutableMapOf<Participant, MutableList<JidCode>>()
-
+    @SubscriptionMapping
+    fun jidCodeStats(@Argument locationId: LocationId) =
+        subscriptionService
+            .subscribe(JidCodeStatsSubscription::class)
+            .map {
                 foundJidCodeRepository
-                    .getJidCodesForParticipants(participants)
-                    .forEach { associatedCode ->
-                        val participant = participantLookupMap.getValue(associatedCode.id)
-                        jidCodesForParticipants.getOrPut(participant) {
-                            mutableListOf()
-                        } += JidCode(associatedCode.code)
-                    }
-
-                Mono.just(jidCodesForParticipants)
+                    .findFoundJidCodesByParticipantLocationId(it.locationId)
+                    .map { it.code }
+                    .toStats()
             }
-
-        batchLoaderRegistry
-            .forName<Location, MutableList<JidCode>>("jidCodesForLocationsLoader")
-            .withOptions {
-                it.setMaxBatchSize(100)
-            }
-            .registerMappedBatchLoader { locations, _ ->
-                val locationLookupMap = locations.associateBy { it.id }
-                val jidCodesForLocations = mutableMapOf<Location, MutableList<JidCode>>()
-
-                foundJidCodeRepository
-                    .getJidCodesForLocations(locations)
-                    .forEach { associatedCode ->
-                        val location = locationLookupMap.getValue(associatedCode.id)
-                        jidCodesForLocations.getOrPut(location) {
-                            mutableListOf()
-                        } += JidCode(associatedCode.code)
-                    }
-
-                Mono.just(jidCodesForLocations)
-            }
-    }
 
     @SchemaMapping
     fun jidCodeStats(
         location: Location,
-        jidCodesForEventsLoader: DataLoader<Location, List<JidCode>>
-    ) = jidCodesForEventsLoader.loadStats(location)
+        jidCodesForLocationsLoader: DataLoader<Location, List<JidCode>>
+    ) = jidCodesForLocationsLoader.loadStats(location)
 
     @SchemaMapping
     fun jidCodeStats(
@@ -86,6 +55,5 @@ class FoundJidCodeStatsController(
             uniqueCountries = map { it.country }.toSet().sorted(),
             uniqueRegions = map { it.region }.toSet().sorted(),
         )
-
     }
 }
