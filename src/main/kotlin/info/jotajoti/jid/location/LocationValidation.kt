@@ -1,11 +1,12 @@
 package info.jotajoti.jid.location
 
+import info.jotajoti.jid.jidcode.ValidJidCodeValidator
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
 import jakarta.validation.Payload
 import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.CLASS
+import kotlin.annotation.AnnotationTarget.*
 import kotlin.reflect.KClass
 
 @Target(CLASS)
@@ -23,4 +24,21 @@ class UniqueCodeAndYearValidator(
 
     override fun isValid(createLocationInput: CreateLocationInput, context: ConstraintValidatorContext?) =
         locationRepository.findFirstByCodeAndYear(createLocationInput.code, createLocationInput.year) == null
+}
+
+@Target(FUNCTION, FIELD)
+@Retention(RUNTIME)
+@Constraint(validatedBy = [ValidLocationValidator::class])
+annotation class ValidLocation(
+    val message: String = "Location must exist",
+    val groups: Array<KClass<*>> = [],
+    val payload: Array<KClass<out Payload>> = []
+)
+
+class ValidLocationValidator(
+    private val locationRepository: LocationRepository
+) : ConstraintValidator<ValidLocation, LocationId> {
+
+    override fun isValid(locationId: LocationId, context: ConstraintValidatorContext?) =
+        locationRepository.existsById(locationId)
 }

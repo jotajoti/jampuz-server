@@ -3,7 +3,6 @@ package info.jotajoti.jid.participant
 import info.jotajoti.jid.admin.Admin
 import info.jotajoti.jid.jidcode.FoundJidCode
 import info.jotajoti.jid.location.Location
-import info.jotajoti.jid.persistence.AbstractAuditable
 import info.jotajoti.jid.security.PinCode
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
@@ -33,5 +32,5 @@ data class Participant(
     var location: Location,
 
     @OneToMany(mappedBy = "participant")
-    var foundJidCodes: List<FoundJidCode>,
-) : AbstractAuditable()
+    var foundJidCodes: List<FoundJidCode> = emptyList(),
+)

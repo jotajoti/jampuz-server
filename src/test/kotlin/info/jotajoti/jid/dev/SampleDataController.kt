@@ -114,10 +114,7 @@ class SampleDataController(
                 year = LocalDate.now().year,
                 owners = owners,
                 participants = emptyList(),
-            ).apply {
-                createdBy = owners.random()
-                lastModifiedBy = owners.random()
-            }
+            )
         }
         return locationRepository.saveAll(locations)
     }
@@ -128,13 +125,10 @@ class SampleDataController(
         }.map { name ->
             Participant(
                 name = name,
-                pinCode = PinCode.random(faker),
+                pinCode = PinCode.random(),
                 location = location,
                 foundJidCodes = emptyList(),
-            ).apply {
-                createdBy = location.owners.random()
-                lastModifiedBy = location.owners.random()
-            }
+            )
         }
         participantRepository.saveAll(participants)
     }
@@ -180,6 +174,4 @@ class SampleDataController(
     private fun JidCode.Companion.random(faker: Faker) =
         JidCode("${Random.nextInt(1, 8)}${faker.country().countryCode2().lowercase()}${faker.bothify("##?")}")
 
-    private fun PinCode.Companion.random(faker: Faker) =
-        PinCode(faker.number().digits(4))
 }

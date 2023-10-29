@@ -13,6 +13,22 @@ type FoundJidCode {
     participant: Participant!
 }
 
+input CreateParticipantInput {
+    name: String!
+    locationId: ID!
+}
+
+input RegisterFoundJidCode {
+    code: String!
+    locationId: ID!
+}
+
 extend type Location {
     participants: [Participant!]
+}
+
+extend type Mutation {
+    authenticateParticipant(locationId: ID!, name: String!, pinCode: String!): String
+    createParticipant(input: CreateParticipantInput!): Participant
+    registerFoundJidCode(input: RegisterFoundJidCode!): FoundJidCode
 }

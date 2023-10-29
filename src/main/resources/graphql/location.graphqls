@@ -19,5 +19,8 @@ extend type Viewer {
 }
 
 extend type Mutation {
+    # Create a new location, with the authenticated admin added as the first owner
     createLocation(input: CreateLocationInput!): Location
+    addOwner(locationId: ID!, adminId: ID!): Location
+    removeOwner(locationId: ID!, adminId: ID!): Location
 }

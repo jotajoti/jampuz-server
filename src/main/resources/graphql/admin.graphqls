@@ -12,5 +12,5 @@ input CreateAdmin {
 
 extend type Mutation {
     authenticateAdmin(email: String!, password: String!): String
-    createAdmin(input: CreateAdmin!): Admin!
+    createAdmin(input: CreateAdmin!): Admin
 }

@@ -1,7 +1,9 @@
 package info.jotajoti.jid.location
 
+import info.jotajoti.jid.admin.AdminId
 import info.jotajoti.jid.jidcode.JidCode
 import info.jotajoti.jid.security.AdminAuthentication
+import info.jotajoti.jid.security.IsOwnerOfLocation
 import info.jotajoti.jid.security.RequireAdmin
 import info.jotajoti.jid.util.toList
 import info.jotajoti.jid.viewer.Viewer
@@ -15,27 +17,27 @@ import org.springframework.validation.annotation.Validated
 @Controller
 @Validated
 class LocationController(
-    private val locationRepository: LocationRepository,
+    private val locationService: LocationService,
 ) {
 
     @SchemaMapping
     fun locations(viewer: Viewer): List<Location> = when {
-        viewer.admin != null -> locationRepository.findAllByOwner(viewer.admin)
-        viewer.participant != null -> locationRepository.findByParticipant(viewer.participant).toList()
+        viewer.admin != null -> locationService.findAllByOwner(viewer.admin)
+        viewer.participant != null -> locationService.findByParticipant(viewer.participant).toList()
         else -> emptyList()
     }
 
     @SchemaMapping
     fun locationById(viewer: Viewer, @Argument locationId: LocationId) = when {
-        viewer.admin != null -> locationRepository.findByIdAndOwner(locationId, viewer.admin)
-        viewer.participant != null -> locationRepository.findByIdAndParticipant(locationId, viewer.participant)
+        viewer.admin != null -> locationService.findByIdAndOwner(locationId, viewer.admin)
+        viewer.participant != null -> locationService.findByIdAndParticipant(locationId, viewer.participant)
         else -> null
     }
 
     @SchemaMapping
     fun locationByCode(viewer: Viewer, @Argument code: JidCode) = when {
-        viewer.admin != null -> locationRepository.findByCodeAndOwner(code, viewer.admin)
-        viewer.participant != null -> locationRepository.findByCodeAndParticipant(code, viewer.participant)
+        viewer.admin != null -> locationService.findByCodeAndOwner(code, viewer.admin)
+        viewer.participant != null -> locationService.findByCodeAndParticipant(code, viewer.participant)
         else -> null
     }
 
@@ -43,20 +45,23 @@ class LocationController(
     @MutationMapping
     fun createLocation(
         @Valid @Argument input: CreateLocationInput,
-        adminAuthentication: AdminAuthentication
-    ): Location {
+        adminAuthentication: AdminAuthentication,
+    ) = locationService.createLocation(input.toEntity(adminAuthentication.admin))
 
-        val location = Location(
-            name = input.name,
-            code = JidCode(input.code),
-            year = input.year,
-            owners = listOf(adminAuthentication.admin),
-        ).apply {
-            createdBy = adminAuthentication.admin
-            lastModifiedBy = adminAuthentication.admin
-        }
+    @IsOwnerOfLocation
+    @MutationMapping
+    fun addOwner(
+        @Argument locationId: LocationId,
+        @Argument adminId: AdminId,
+        adminAuthentication: AdminAuthentication,
+    ) = locationService.addOwner(locationId, adminId, adminAuthentication)
 
-        return locationRepository.save(location)
-    }
+    @IsOwnerOfLocation
+    @MutationMapping
+    fun removeOwner(
+        @Argument locationId: LocationId,
+        @Argument adminId: AdminId,
+        adminAuthentication: AdminAuthentication,
+    ) = locationService.removeOwner(locationId, adminId, adminAuthentication)
 
 }

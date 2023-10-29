@@ -21,8 +21,4 @@ data class FoundJidCode(
     var participant: Participant,
 
     var code: JidCode,
-
-) {
-
-    val country = code.country
-}
+)

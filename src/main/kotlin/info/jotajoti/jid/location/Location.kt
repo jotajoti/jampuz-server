@@ -3,7 +3,6 @@ package info.jotajoti.jid.location
 import info.jotajoti.jid.admin.Admin
 import info.jotajoti.jid.jidcode.JidCode
 import info.jotajoti.jid.participant.Participant
-import info.jotajoti.jid.persistence.AbstractAuditable
 import jakarta.persistence.*
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes
@@ -35,4 +34,4 @@ data class Location(
 
     @OneToMany(mappedBy = "location")
     var participants: List<Participant> = emptyList(),
-) : AbstractAuditable()
+)

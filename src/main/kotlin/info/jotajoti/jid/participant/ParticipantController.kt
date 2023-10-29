@@ -1,14 +1,19 @@
 package info.jotajoti.jid.participant
 
-import info.jotajoti.jid.location.Location
-import org.springframework.graphql.data.method.annotation.SchemaMapping
+import jakarta.validation.Valid
+import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.stereotype.Controller
+import org.springframework.validation.annotation.Validated
 
 @Controller
-class ParticipantController {
+@Validated
+class ParticipantController(
+    private val participantService: ParticipantService,
+) {
 
-    @SchemaMapping
-    fun participants(location: Location) =
-        location.participants
+    @MutationMapping
+    fun createParticipant(@Valid @Argument input: CreateParticipantInput) =
+        participantService.createParticipant(input)
 
 }

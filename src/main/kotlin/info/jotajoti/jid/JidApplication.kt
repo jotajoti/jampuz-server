@@ -2,6 +2,8 @@ package info.jotajoti.jid
 
 import graphql.scalars.ExtendedScalars
 import info.jotajoti.jid.jidcode.AssociatedCode
+import info.jotajoti.jid.jidcode.ValidJidCodeValidator
+import info.jotajoti.jid.location.UniqueCodeAndYearValidator
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -25,7 +27,11 @@ class GraphQlConfig {
 }
 
 @Configuration
-@RegisterReflectionForBinding(AssociatedCode::class)
+@RegisterReflectionForBinding(
+    AssociatedCode::class,
+    UniqueCodeAndYearValidator::class,
+    ValidJidCodeValidator::class,
+)
 class NativeConfig
 
 fun main(args: Array<String>) {
