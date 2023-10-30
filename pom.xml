@@ -5,11 +5,11 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.4</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>info.jotajoti</groupId>
 	<artifactId>jid</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>jid</name>
 	<description>Joti Location Service</description>
 	<properties>
@@ -18,7 +18,8 @@
 	</properties>
 	<scm>
 		<connection>scm:git:https://github.com/jotajoti/jid-server-spring</connection>
-	</scm>
+	  <tag>jid-0.0.1</tag>
+  </scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
