@@ -16,6 +16,9 @@
 		<java.version>17</java.version>
 		<kotlin.version>1.8.22</kotlin.version>
 	</properties>
+	<scm>
+		<connection>scm:git:https://github.com/jotajoti/jid-server-spring</connection>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
