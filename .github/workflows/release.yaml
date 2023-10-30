@@ -1,4 +1,4 @@
-name: "Create tag and pump version"
+name: "Create tag and bump version"
 
 on:
   workflow_dispatch:
