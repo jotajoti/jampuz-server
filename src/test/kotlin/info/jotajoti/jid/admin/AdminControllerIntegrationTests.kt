@@ -8,18 +8,17 @@ class AdminControllerIntegrationTests : GraphQLIntegrationTests() {
     @Test
     fun `should create admin user`() {
 
-        executeQuery(
+        executeAnonymousQuery(
             """
             mutation CreateAdmin {
                 createAdmin(
-                    input: { name: "Test 1", email: "test1@example.com", password: "test123" }
+                    input: { name: "Admin 1", email: "admin1@example.com", password: "admin123" }
                 ) {
                     id
                 }
             }
         """.trimIndent()
         )
-            .path("createAdmin.id")
-            .entity(String::class.java)
+            .path("createAdmin.id").hasValue()
     }
 }

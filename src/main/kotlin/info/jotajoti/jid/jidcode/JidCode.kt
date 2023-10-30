@@ -1,5 +1,7 @@
 package info.jotajoti.jid.jidcode
 
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Transient
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
@@ -11,8 +13,10 @@ import kotlin.annotation.AnnotationTarget.FIELD
 import kotlin.annotation.AnnotationTarget.FUNCTION
 import kotlin.reflect.KClass
 
-@JvmInline
-value class JidCode(private val code: String) {
+@Embeddable
+data class JidCode(
+    val code: String
+) {
 
     init {
         assert(isValid(code))
@@ -32,15 +36,16 @@ value class JidCode(private val code: String) {
                 ?: false
     }
 
-    val value: String
-        get() = code.lowercase()
-
+    @get:Transient
     val region: Region
-        get() = Region.values().find { it.code == value[0].digitToInt() }!!
+        get() = Region.values().find { it.code == code[0].digitToInt() }!!
 
+    @get:Transient
     val country: String
-        get() = value.substring(1, 3)
+        get() = code.lowercase().substring(1, 3)
 }
+
+fun String.toJidCode() = JidCode(this)
 
 enum class Region(val code: Int) {
     AFRICA(1),

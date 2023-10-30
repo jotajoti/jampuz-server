@@ -20,5 +20,6 @@ data class FoundJidCode(
     @JoinColumn(name = "participant_id", nullable = false)
     var participant: Participant,
 
+    @Embedded
     var code: JidCode,
 )

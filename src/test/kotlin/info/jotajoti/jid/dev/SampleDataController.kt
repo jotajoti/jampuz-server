@@ -10,6 +10,7 @@ import info.jotajoti.jid.location.Location
 import info.jotajoti.jid.location.LocationRepository
 import info.jotajoti.jid.participant.Participant
 import info.jotajoti.jid.participant.ParticipantRepository
+import info.jotajoti.jid.random
 import info.jotajoti.jid.security.JwtService
 import info.jotajoti.jid.security.PinCode
 import info.jotajoti.jid.security.SecurityService
@@ -57,7 +58,7 @@ class SampleDataController(
         val users = createSampleUsers(faker)
         val locations = createSampleLocations(faker, users)
         val participants = createSampleParticipants(faker, locations)
-        val jidCodes = createSampleJidCodes(faker)
+        val jidCodes = createSampleJidCodes()
         createSampleFoundJidCodes(participants, jidCodes)
 
         return ok().body(
@@ -110,7 +111,7 @@ class SampleDataController(
             Location(
                 id = null,
                 name = faker.address().cityName(),
-                code = JidCode.random(faker),
+                code = JidCode.random(),
                 year = LocalDate.now().year,
                 owners = owners,
                 participants = emptyList(),
@@ -133,7 +134,7 @@ class SampleDataController(
         participantRepository.saveAll(participants)
     }
 
-    private fun createSampleJidCodes(faker: Faker) = createSamples(sampleProperties.jidCodes) { JidCode.random(faker) }
+    private fun createSampleJidCodes() = createSamples(sampleProperties.jidCodes) { JidCode.random() }
 
     private fun createSampleFoundJidCodes(participants: List<Participant>, jidCodes: List<JidCode>) =
         participants.flatMap { participant ->
@@ -170,8 +171,5 @@ class SampleDataController(
         }
         return foundItems.toList()
     }
-
-    private fun JidCode.Companion.random(faker: Faker) =
-        JidCode("${Random.nextInt(1, 8)}${faker.country().countryCode2().lowercase()}${faker.bothify("##?")}")
 
 }

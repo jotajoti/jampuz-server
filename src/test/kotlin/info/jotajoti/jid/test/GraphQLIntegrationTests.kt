@@ -4,8 +4,15 @@ import info.jotajoti.jid.admin.Admin
 import info.jotajoti.jid.admin.AdminId
 import info.jotajoti.jid.admin.AdminRepository
 import info.jotajoti.jid.dev.SampleProperties
+import info.jotajoti.jid.jidcode.JidCode
+import info.jotajoti.jid.location.Location
+import info.jotajoti.jid.location.LocationRepository
+import info.jotajoti.jid.participant.Participant
 import info.jotajoti.jid.participant.ParticipantId
+import info.jotajoti.jid.participant.ParticipantRepository
+import info.jotajoti.jid.random
 import info.jotajoti.jid.security.JwtService
+import info.jotajoti.jid.security.PinCode
 import info.jotajoti.jid.security.SecurityService
 import info.jotajoti.jid.security.Subject
 import info.jotajoti.jid.security.SubjectType.ADMIN
@@ -21,6 +28,7 @@ import org.springframework.graphql.test.tester.GraphQlTester
 import org.springframework.graphql.test.tester.WebGraphQlTester
 import org.springframework.test.context.jdbc.Sql
 import org.testcontainers.containers.MySQLContainer
+import java.time.LocalDate
 
 @AutoConfigureHttpGraphQlTester
 @SpringBootTest
@@ -46,12 +54,20 @@ abstract class GraphQLIntegrationTests {
     lateinit var adminRepository: AdminRepository
 
     @Autowired
+    lateinit var locationRepository: LocationRepository
+
+    @Autowired
+    lateinit var participantRepository: ParticipantRepository
+
+    @Autowired
     lateinit var securityService: SecurityService
 
     @Autowired
     lateinit var jwtService: JwtService
 
     val testAdmins = mutableListOf<Admin>()
+    lateinit var testLocation: Location
+    val testParticipants = mutableListOf<Participant>()
 
     @BeforeEach
     @Sql("/db/reset.sql")
@@ -63,30 +79,105 @@ abstract class GraphQLIntegrationTests {
                 Admin(
                     name = "Admin $it",
                     email = "admin$it@example.com",
-                    passwordHash = securityService.hashPassword("admin$it")
+                    passwordHash = securityService.hashPassword("admin$it"),
+                )
+            )
+        }
+
+        testLocation = locationRepository.save(
+            Location(
+                name = "Location 1",
+                code = JidCode.random(),
+                year = LocalDate.now().year,
+                owners = listOf(testAdmins[0], testAdmins[1]),
+            )
+        )
+
+        repeat(5) {
+            testParticipants += participantRepository.save(
+                Participant(
+                    name = "Participant $it",
+                    pinCode = PinCode.random(),
+                    location = testLocation,
                 )
             )
         }
     }
 
-    fun executeQuery(@Language("GraphQL") graphQlString: String) =
-        graphQlTester.executeQuery(graphQlString)
+    fun executeAnonymousQuery(
+        @Language("GraphQL") graphQlString: String,
+        vararg variables: Pair<String, Any>
+    ) =
+        graphQlTester
+            .document(graphQlString)
+            .addVariables(*variables)
+            .execute()
 
-    fun executeAdminQuery(@Language("GraphQL") graphQlString: String, adminId: AdminId = testAdmins[0].id!!) =
+    fun executeAnonymousQueryName(
+        graphQlDocument: String,
+        vararg variables: Pair<String, Any>
+    ) =
+        graphQlTester
+            .documentName(graphQlDocument)
+            .addVariables(*variables)
+            .execute()
+
+    fun executeAdminQuery(
+        @Language("GraphQL") graphQlString: String,
+        adminId: AdminId = testAdmins[0].id!!,
+        vararg variables: Pair<String, Any>
+    ) =
+        prepareAdminTester(adminId)
+            .document(graphQlString)
+            .addVariables(*variables)
+            .execute()
+
+    fun executeAdminQueryName(
+        graphQlDocument: String,
+        adminId: AdminId = testAdmins[0].id!!,
+        vararg variables: Pair<String, Any>
+    ) =
+        prepareAdminTester(adminId)
+            .documentName(graphQlDocument)
+            .addVariables(*variables)
+            .execute()
+
+    fun executeParticipantQuery(
+        @Language("GraphQL") graphQlString: String,
+        participantId: ParticipantId = testParticipants[0].id!!,
+        vararg variables: Pair<String, Any>
+    ) =
+        prepareParticipantTester(participantId)
+            .document(graphQlString)
+            .addVariables(*variables)
+            .execute()
+
+    fun executeParticipantQueryName(
+        graphQlDocument: String,
+        participantId: ParticipantId = testParticipants[0].id!!,
+        vararg variables: Pair<String, Any>
+    ) =
+        prepareParticipantTester(participantId)
+            .documentName(graphQlDocument)
+            .addVariables(*variables)
+            .execute()
+
+    private fun prepareAdminTester(adminId: AdminId) =
         graphQlTester
             .mutate()
             .header("Authorization", "Bearer ${jwtService.createToken(Subject(ADMIN, adminId))}")
             .build()
-            .executeQuery(graphQlString)
 
-    fun executeParticipantQuery(@Language("GraphQL") graphQlString: String, participantId: ParticipantId) =
+    private fun prepareParticipantTester(participantId: ParticipantId) =
         graphQlTester
             .mutate()
             .header("Authorization", "Bearer ${jwtService.createToken(Subject(PARTICIPANT, participantId))}")
             .build()
-            .executeQuery(graphQlString)
 
-    private fun GraphQlTester.executeQuery(@Language("GraphQL") graphQlString: String) =
-        document(graphQlString)
-            .execute()
+    private fun <T : GraphQlTester.Request<T>?> GraphQlTester.Request<T>.addVariables(vararg variables: Pair<String, Any>) =
+        apply {
+            variables.forEach { (name, value) ->
+                variable(name, value)
+            }
+        }
 }

@@ -17,7 +17,7 @@ class LocationService(
 
     fun getById(locationId: LocationId) = locationRepository.getReferenceById(locationId)
 
-    fun findAllByOwner(admin: Admin) = locationRepository.findAllByOwner(admin)
+    fun findAllByOwner(admin: Admin) = locationRepository.findAllByOwnersContains(admin)
 
     fun findByParticipant(participant: Participant) = locationRepository.findByParticipant(participant)
 

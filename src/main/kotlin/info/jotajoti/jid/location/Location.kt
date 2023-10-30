@@ -20,6 +20,7 @@ data class Location(
 
     var name: String,
 
+    @Embedded
     var code: JidCode,
 
     var year: Int,

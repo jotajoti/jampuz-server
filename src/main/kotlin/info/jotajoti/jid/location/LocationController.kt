@@ -21,6 +21,9 @@ class LocationController(
 ) {
 
     @SchemaMapping
+    fun code(location: Location) = location.code
+
+    @SchemaMapping
     fun locations(viewer: Viewer): List<Location> = when {
         viewer.admin != null -> locationService.findAllByOwner(viewer.admin)
         viewer.participant != null -> locationService.findByParticipant(viewer.participant).toList()

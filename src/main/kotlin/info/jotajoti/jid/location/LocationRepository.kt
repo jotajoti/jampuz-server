@@ -1,18 +1,17 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.participant.Participant
 import info.jotajoti.jid.admin.Admin
 import info.jotajoti.jid.jidcode.JidCode
+import info.jotajoti.jid.participant.Participant
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface LocationRepository : JpaRepository<Location, LocationId> {
 
-    fun findFirstByCodeAndYear(code: String, year: Int): Location?
+    fun findFirstByCodeAndYear(code: JidCode, year: Int): Location?
 
-    @Query("SELECT a.locations FROM Admin a WHERE a = :owner")
-    fun findAllByOwner(@Param("owner") owner: Admin): List<Location>
+    fun findAllByOwnersContains(owner: Admin): List<Location>
 
     @Query("SELECT p.location FROM Participant p WHERE p = :participant")
     fun findByParticipant(@Param("participant") participant: Participant): Location?

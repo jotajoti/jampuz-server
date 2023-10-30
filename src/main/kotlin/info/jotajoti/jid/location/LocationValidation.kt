@@ -1,5 +1,6 @@
 package info.jotajoti.jid.location
 
+import info.jotajoti.jid.jidcode.toJidCode
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
@@ -22,7 +23,10 @@ class UniqueCodeAndYearValidator(
 ) : ConstraintValidator<UniqueCodeAndYear, CreateLocationInput> {
 
     override fun isValid(createLocationInput: CreateLocationInput, context: ConstraintValidatorContext?) =
-        locationRepository.findFirstByCodeAndYear(createLocationInput.code, createLocationInput.year) == null
+        locationRepository.findFirstByCodeAndYear(
+            createLocationInput.code.toJidCode(),
+            createLocationInput.year
+        ) == null
 }
 
 @Target(FUNCTION, FIELD)
