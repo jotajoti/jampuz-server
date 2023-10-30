@@ -16,5 +16,10 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Test with maven
+      - name: Configure Git user
+        run: |
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "$GITHUB_ACTOR"
+
+      - name: Tag and bump
         run: ./mvnw -B release:prepare --file pom.xml
