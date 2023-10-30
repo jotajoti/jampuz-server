@@ -192,7 +192,7 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>3.0.1</version>
 				<configuration>
-					<scmDevelopmentCommitComment>[skip ci] prepare for next development iteration</scmDevelopmentCommitComment>
+					<scmDevelopmentCommitComment>prepare for next development iteration</scmDevelopmentCommitComment>
 					<scmReleaseCommitComment>prepare release @{releaseLabel}</scmReleaseCommitComment>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
