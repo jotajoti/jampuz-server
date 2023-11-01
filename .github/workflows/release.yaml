@@ -2,6 +2,10 @@ name: "Create tag and bump version"
 
 on:
   workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'Release version in the format X.Y.Z, eg. 1.2.0 (leave blank for auto-increment)'
+        type: string
 
 jobs:
   release:
@@ -31,6 +35,4 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
 
       - name: Tag and bump
-        run: ./mvnw -B release:prepare --file pom.xml
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: ./mvnw -B -DreleaseVersion=${{ inputs.releaseVersion }} release:prepare --file pom.xml
