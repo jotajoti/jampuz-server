@@ -194,10 +194,10 @@
 				<version>3.0.1</version>
 				<configuration>
 					<preparationGoals>
-						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.rel.info.jotajoti:jid" scm:checkin
+						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.rel.info.jotajoti:jid" scm:checkin verify
 					</preparationGoals>
 					<completionGoals>
-						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.dev.info.jotajoti:jid" scm:checkin
+						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.dev.info.jotajoti:jid" scm:checkin verify
 					</completionGoals>
 					<scmDevelopmentCommitComment>prepare for next development iteration</scmDevelopmentCommitComment>
 					<scmReleaseCommitComment>prepare release @{releaseLabel}</scmReleaseCommitComment>

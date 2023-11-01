@@ -35,4 +35,4 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
 
       - name: Tag and bump
-        run: ./mvnw -B -DreleaseVersion=${{ inputs.releaseVersion }} release:prepare --file pom.xml
+        run: ./mvnw -B -DreleaseVersion=${{ inputs.releaseVersion }} compile test-compile release:prepare --file pom.xml
