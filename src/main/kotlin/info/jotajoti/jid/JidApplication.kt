@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.PropertySource
 import org.springframework.graphql.execution.RuntimeWiringConfigurer
 
 
@@ -33,6 +34,10 @@ class GraphQlConfig {
     ValidJidCodeValidator::class,
 )
 class NativeConfig
+
+@Configuration
+@PropertySource("classpath:version.properties")
+class VersionConfig
 
 fun main(args: Array<String>) {
     runApplication<JidApplication>(*args)

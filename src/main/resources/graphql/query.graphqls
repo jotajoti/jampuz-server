@@ -1,7 +1,4 @@
 type Query {
-    status: Status!
+    serverVersion: String!
 }
 
-type Status {
-    ok: Boolean!
-}
