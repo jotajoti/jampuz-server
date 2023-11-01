@@ -3,6 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .DS_Store
+pom.xml.releaseBackup
+release.properties
 
 ### STS ###
 .apt_generated

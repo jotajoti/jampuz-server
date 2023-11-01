@@ -18,6 +18,7 @@
 	</properties>
 	<scm>
 		<connection>scm:git:https://github.com/jotajoti/jid-server-spring</connection>
+		<developerConnection>scm:git:https://github.com/jotajoti/jid-server-spring</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
@@ -192,6 +193,12 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>3.0.1</version>
 				<configuration>
+					<preparationGoals>
+						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.rel.info.jotajoti:jid" scm:checkin
+					</preparationGoals>
+					<completionGoals>
+						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.dev.info.jotajoti:jid" scm:checkin
+					</completionGoals>
 					<scmDevelopmentCommitComment>prepare for next development iteration</scmDevelopmentCommitComment>
 					<scmReleaseCommitComment>prepare release @{releaseLabel}</scmReleaseCommitComment>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
@@ -199,5 +206,24 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<artifactId>maven-scm-plugin</artifactId>
+							<configuration>
+								<pushChanges>false</pushChanges> <!-- Is done by the release plugin -->
+								<message>[skip ci] update version.properties</message>
+								<includes>src/main/resources/version.properties</includes>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
