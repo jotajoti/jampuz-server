@@ -14,35 +14,33 @@ import org.junit.jupiter.api.Test
 class LocationControllerIntegrationTests : GraphQLIntegrationTests() {
 
     @Nested
-    inner class GetLocationByIdTests {
+    inner class GetLocationByCodeTests {
 
         @Test
-        fun `should return location by id`() {
+        fun `should return newest location by code`() {
 
-            val locationId = testLocation.id!!
+            val code = testLocation.code.code
 
             executeAdminQuery(
                 """
-                    query GetLocationById {
-                        viewer {
-                            locationById(locationId: "$locationId") {
-                                id
-                                name
-                                code {
-                                    value
-                                    country
-                                    region
-                                }
-                            }                        
-                        }
+                    query GetLocationByCode {
+                        locationByCode(code: "$code") {
+                            id
+                            name
+                            code {
+                                value
+                                country
+                                region
+                            }
+                        }                        
                     }
                 """.trimIndent()
             )
-                .path("viewer.locationById.id").isEqualTo(locationId)
-                .path("viewer.locationById.name").isEqualTo(testLocation.name)
-                .path("viewer.locationById.code.value").isEqualTo(testLocation.code.code)
-                .path("viewer.locationById.code.country").isEqualTo(testLocation.code.country)
-                .path("viewer.locationById.code.region").isEqualTo(testLocation.code.region)
+                .path("locationByCode.id").isEqualTo(testLocation.id)
+                .path("locationByCode.name").isEqualTo(testLocation.name)
+                .path("locationByCode.code.value").isEqualTo(testLocation.code.code)
+                .path("locationByCode.code.country").isEqualTo(testLocation.code.country)
+                .path("locationByCode.code.region").isEqualTo(testLocation.code.region)
         }
     }
 
