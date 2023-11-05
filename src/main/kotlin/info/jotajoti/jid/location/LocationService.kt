@@ -23,13 +23,9 @@ class LocationService(
 
     fun findByIdAndOwner(locationId: LocationId, admin: Admin) = locationRepository.findByIdAndOwner(locationId, admin)
 
-    fun findByIdAndParticipant(locationId: LocationId, participant: Participant) =
-        locationRepository.findByIdAndParticipant(locationId, participant)
+    fun findLatestByCode(jidCode: JidCode) = locationRepository.findFirstByCodeCodeIgnoreCaseOrderByYearDesc(jidCode.code)
 
-    fun findByCodeAndOwner(code: JidCode, admin: Admin) = locationRepository.findByCodeAndOwner(code, admin)
-
-    fun findByCodeAndParticipant(code: JidCode, participant: Participant) =
-        locationRepository.findByCodeAndParticipant(code, participant)
+    fun findByCodeAndYear(jidCode: JidCode, year: Int) = locationRepository.findFirstByCodeCodeIgnoreCaseAndYear(jidCode.code, year)
 
     fun createLocation(location: Location) =
         locationRepository.save(location)

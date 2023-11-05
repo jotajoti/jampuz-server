@@ -19,7 +19,7 @@ import info.jotajoti.jid.security.SubjectType.ADMIN
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
@@ -38,7 +38,7 @@ class SampleDataController(
     private val securityService: SecurityService,
 ) {
 
-    @GetMapping("/sampledata")
+    @PostMapping("/sampledata")
     fun createSampleData(
         @RequestParam deleteExisting: Boolean = false,
         @RequestParam locale: Locale?
@@ -138,12 +138,15 @@ class SampleDataController(
 
     private fun createSampleFoundJidCodes(participants: List<Participant>, jidCodes: List<JidCode>) =
         participants.flatMap { participant ->
-            val foundJidCodes = createSamples(Random.nextInt(sampleProperties.maxFoundJidCodesPerParticipant)) {
-                FoundJidCode(
-                    participant = participant,
-                    code = jidCodes.random()
-                )
-            }
+            val jidCodesForParticipant =
+                jidCodes.random(Random.nextInt(sampleProperties.maxFoundJidCodesPerParticipant))
+            val foundJidCodes = jidCodesForParticipant
+                .map {
+                    FoundJidCode(
+                        participant = participant,
+                        code = it,
+                    )
+                }
             foundJidCodeRepository.saveAll(foundJidCodes)
         }
 

@@ -4,13 +4,15 @@ import info.jotajoti.jid.admin.AdminId
 import info.jotajoti.jid.jidcode.JidCode
 import info.jotajoti.jid.security.AdminAuthentication
 import info.jotajoti.jid.security.IsOwnerOfLocation
+import info.jotajoti.jid.security.ParticipantAuthentication
 import info.jotajoti.jid.security.RequireAdmin
 import info.jotajoti.jid.util.toList
-import info.jotajoti.jid.viewer.Viewer
 import jakarta.validation.Valid
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
+import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
+import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.validation.annotation.Validated
 
@@ -23,26 +25,20 @@ class LocationController(
     @SchemaMapping
     fun code(location: Location) = location.code
 
-    @SchemaMapping
-    fun locations(viewer: Viewer): List<Location> = when {
-        viewer.admin != null -> locationService.findAllByOwner(viewer.admin)
-        viewer.participant != null -> locationService.findByParticipant(viewer.participant).toList()
+    @QueryMapping
+    fun locations(authentication: Authentication) = when (authentication) {
+        is AdminAuthentication -> locationService.findAllByOwner(authentication.admin)
+        is ParticipantAuthentication -> locationService.findByParticipant(authentication.participant).toList()
         else -> emptyList()
     }
 
-    @SchemaMapping
-    fun locationById(viewer: Viewer, @Argument locationId: LocationId) = when {
-        viewer.admin != null -> locationService.findByIdAndOwner(locationId, viewer.admin)
-        viewer.participant != null -> locationService.findByIdAndParticipant(locationId, viewer.participant)
-        else -> null
-    }
-
-    @SchemaMapping
-    fun locationByCode(viewer: Viewer, @Argument code: JidCode) = when {
-        viewer.admin != null -> locationService.findByCodeAndOwner(code, viewer.admin)
-        viewer.participant != null -> locationService.findByCodeAndParticipant(code, viewer.participant)
-        else -> null
-    }
+    @QueryMapping
+    fun locationByCode(@Argument code: JidCode, @Argument year: Int?) =
+        if (year != null) {
+            locationService.findByCodeAndYear(code, year)
+        } else {
+            locationService.findLatestByCode(code)
+        }
 
     @RequireAdmin
     @MutationMapping

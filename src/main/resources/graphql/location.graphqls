@@ -12,10 +12,9 @@ input CreateLocationInput {
     year: Int!
 }
 
-extend type Viewer {
+extend type Query {
     locations: [Location!]
-    locationById(locationId: ID!): Location
-    locationByCode(code: String!): Location
+    locationByCode(code: String!, year: Int): Location
 }
 
 extend type Mutation {

@@ -8,7 +8,9 @@ import org.dataloader.DataLoader
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping
+import org.springframework.graphql.execution.BatchLoaderRegistry
 import org.springframework.stereotype.Controller
+import reactor.core.publisher.Mono
 import java.util.concurrent.CompletableFuture
 
 
@@ -16,7 +18,52 @@ import java.util.concurrent.CompletableFuture
 class FoundJidCodeStatsController(
     private val foundJidCodeRepository: FoundJidCodeRepository,
     private val subscriptionService: SubscriptionService,
+    batchLoaderRegistry: BatchLoaderRegistry,
 ) {
+
+    init {
+        batchLoaderRegistry
+            .forName<Participant, MutableList<JidCode>>("jidCodesForParticipantsLoader")
+            .withOptions {
+                it.setMaxBatchSize(100)
+            }
+            .registerMappedBatchLoader { participants, _ ->
+                val participantLookupMap = participants.associateBy { it.id }
+                val jidCodesForParticipants = mutableMapOf<Participant, MutableList<JidCode>>()
+
+                foundJidCodeRepository
+                    .getJidCodesForParticipants(participants)
+                    .forEach { associatedCode ->
+                        val participant = participantLookupMap.getValue(associatedCode.id)
+                        jidCodesForParticipants.getOrPut(participant) {
+                            mutableListOf()
+                        } += associatedCode.code
+                    }
+
+                Mono.just(jidCodesForParticipants)
+            }
+
+        batchLoaderRegistry
+            .forName<Location, MutableList<JidCode>>("jidCodesForLocationsLoader")
+            .withOptions {
+                it.setMaxBatchSize(100)
+            }
+            .registerMappedBatchLoader { locations, _ ->
+                val locationLookupMap = locations.associateBy { it.id }
+                val jidCodesForLocations = mutableMapOf<Location, MutableList<JidCode>>()
+
+                foundJidCodeRepository
+                    .getJidCodesForLocations(locations)
+                    .forEach { associatedCode ->
+                        val location = locationLookupMap.getValue(associatedCode.id)
+                        jidCodesForLocations.getOrPut(location) {
+                            mutableListOf()
+                        } += associatedCode.code
+                    }
+
+                Mono.just(jidCodesForLocations)
+            }
+    }
 
     @SubscriptionMapping
     fun jidCodeStats(@Argument locationId: LocationId) =

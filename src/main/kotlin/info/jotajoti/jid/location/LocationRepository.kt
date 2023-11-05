@@ -9,7 +9,10 @@ import org.springframework.data.repository.query.Param
 
 interface LocationRepository : JpaRepository<Location, LocationId> {
 
-    fun findFirstByCodeAndYear(code: JidCode, year: Int): Location?
+    fun findFirstByCodeCodeIgnoreCaseOrderByYearDesc(code: String): Location?
+
+    fun findFirstByCodeCodeIgnoreCaseAndYear(code: String, year: Int): Location?
+
 
     fun findAllByOwnersContains(owner: Admin): List<Location>
 
@@ -18,13 +21,4 @@ interface LocationRepository : JpaRepository<Location, LocationId> {
 
     @Query("SELECT l FROM Admin a JOIN a.locations l WHERE a = :owner AND l.id = :id")
     fun findByIdAndOwner(@Param("id") id: LocationId, @Param("owner") owner: Admin): Location?
-
-    @Query("SELECT p.location FROM Participant p WHERE p = :participant AND p.location.id = :id")
-    fun findByIdAndParticipant(@Param("id") id: LocationId, @Param("participant") participant: Participant): Location?
-
-    @Query("SELECT l FROM Admin a JOIN a.locations l WHERE a = :owner AND l.code = :code")
-    fun findByCodeAndOwner(@Param("code") code: JidCode, @Param("owner") owner: Admin): Location?
-
-    @Query("SELECT p.location FROM Participant p WHERE p = :participant AND p.location.code = :code")
-    fun findByCodeAndParticipant(@Param("code") code: JidCode, @Param("participant") participant: Participant): Location?
 }

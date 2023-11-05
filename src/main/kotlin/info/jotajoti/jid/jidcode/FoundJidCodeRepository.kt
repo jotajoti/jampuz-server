@@ -21,5 +21,5 @@ interface FoundJidCodeRepository : JpaRepository<FoundJidCode, FoundJidCodeId> {
 
 data class AssociatedCode(
     val id: UUID,
-    val code: String,
+    val code: JidCode,
 )
