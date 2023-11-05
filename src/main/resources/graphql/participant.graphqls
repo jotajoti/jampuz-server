@@ -32,3 +32,9 @@ extend type Mutation {
     createParticipant(input: CreateParticipantInput!): Participant
     registerFoundJidCode(input: RegisterFoundJidCode!): FoundJidCode
 }
+
+extend type Query {
+    # Return null if not authenticated or if authentication is not a participant
+    authenticatedParticipant: Participant
+}
+
