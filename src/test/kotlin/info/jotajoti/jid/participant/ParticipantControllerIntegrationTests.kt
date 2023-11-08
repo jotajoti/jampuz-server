@@ -1,9 +1,7 @@
 package info.jotajoti.jid.participant
 
-import info.jotajoti.jid.test.GraphQLIntegrationTests
-import info.jotajoti.jid.test.isEqualTo
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import info.jotajoti.jid.test.*
+import org.junit.jupiter.api.*
 
 class ParticipantControllerIntegrationTests : GraphQLIntegrationTests() {
 

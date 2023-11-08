@@ -1,6 +1,6 @@
 package info.jotajoti.jid.test
 
-import org.springframework.graphql.test.tester.GraphQlTester
+import org.springframework.graphql.test.tester.*
 
 fun <T> GraphQlTester.Path.isEqualTo(value: T) = entity(value!!::class.java).isEqualTo(value)
 

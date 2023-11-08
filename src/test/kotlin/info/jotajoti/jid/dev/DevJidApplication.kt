@@ -1,12 +1,12 @@
 package info.jotajoti.jid.dev
 
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.devtools.restart.RestartScope
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection
-import org.springframework.context.annotation.Bean
-import org.testcontainers.containers.MySQLContainer
+import org.springframework.boot.*
+import org.springframework.boot.context.properties.*
+import org.springframework.boot.devtools.restart.*
+import org.springframework.boot.test.context.*
+import org.springframework.boot.testcontainers.service.connection.*
+import org.springframework.context.annotation.*
+import org.testcontainers.containers.*
 import info.jotajoti.jid.main as springMain
 
 @TestConfiguration

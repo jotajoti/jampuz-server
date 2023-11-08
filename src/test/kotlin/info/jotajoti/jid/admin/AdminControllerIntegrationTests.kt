@@ -1,7 +1,7 @@
 package info.jotajoti.jid.admin
 
-import info.jotajoti.jid.test.GraphQLIntegrationTests
-import org.junit.jupiter.api.Test
+import info.jotajoti.jid.test.*
+import org.junit.jupiter.api.*
 
 class AdminControllerIntegrationTests : GraphQLIntegrationTests() {
 

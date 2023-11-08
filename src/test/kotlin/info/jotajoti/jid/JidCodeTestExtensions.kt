@@ -1,6 +1,6 @@
 package info.jotajoti.jid
 
-import info.jotajoti.jid.jidcode.JidCode
+import info.jotajoti.jid.jidcode.*
 import java.util.*
 
 fun JidCode.Companion.random() =

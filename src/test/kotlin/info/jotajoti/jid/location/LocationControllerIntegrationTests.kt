@@ -1,15 +1,11 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.admin.AdminId
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.random
-import info.jotajoti.jid.test.GraphQLIntegrationTests
-import info.jotajoti.jid.test.hasSize
-import info.jotajoti.jid.test.isEqualTo
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import info.jotajoti.jid.*
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.jidcode.*
+import info.jotajoti.jid.test.*
+import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.*
 
 class LocationControllerIntegrationTests : GraphQLIntegrationTests() {
 

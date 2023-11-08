@@ -1,10 +1,8 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.random
-import info.jotajoti.jid.test.GraphQLIntegrationTests
-import info.jotajoti.jid.test.isEqualTo
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
+import info.jotajoti.jid.*
+import info.jotajoti.jid.test.*
+import org.junit.jupiter.api.*
 
 class FoundJidCodeControllerIntegrationTests : GraphQLIntegrationTests() {
 

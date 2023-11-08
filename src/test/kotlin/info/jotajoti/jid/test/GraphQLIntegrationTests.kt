@@ -1,34 +1,24 @@
 package info.jotajoti.jid.test
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.admin.AdminId
-import info.jotajoti.jid.admin.AdminRepository
-import info.jotajoti.jid.dev.SampleProperties
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.location.Location
-import info.jotajoti.jid.location.LocationRepository
-import info.jotajoti.jid.participant.Participant
-import info.jotajoti.jid.participant.ParticipantId
-import info.jotajoti.jid.participant.ParticipantRepository
-import info.jotajoti.jid.random
-import info.jotajoti.jid.security.JwtService
-import info.jotajoti.jid.security.PinCode
-import info.jotajoti.jid.security.SecurityService
-import info.jotajoti.jid.security.Subject
-import info.jotajoti.jid.security.SubjectType.ADMIN
-import info.jotajoti.jid.security.SubjectType.PARTICIPANT
-import org.intellij.lang.annotations.Language
-import org.junit.jupiter.api.BeforeEach
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.context.properties.EnableConfigurationProperties
-import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection
-import org.springframework.graphql.test.tester.GraphQlTester
-import org.springframework.graphql.test.tester.WebGraphQlTester
-import org.springframework.test.context.jdbc.Sql
-import org.testcontainers.containers.MySQLContainer
-import java.time.LocalDate
+import info.jotajoti.jid.*
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.dev.*
+import info.jotajoti.jid.jidcode.*
+import info.jotajoti.jid.location.*
+import info.jotajoti.jid.participant.*
+import info.jotajoti.jid.security.*
+import info.jotajoti.jid.security.SubjectType.*
+import org.intellij.lang.annotations.*
+import org.junit.jupiter.api.*
+import org.springframework.beans.factory.annotation.*
+import org.springframework.boot.context.properties.*
+import org.springframework.boot.test.autoconfigure.graphql.tester.*
+import org.springframework.boot.test.context.*
+import org.springframework.boot.testcontainers.service.connection.*
+import org.springframework.graphql.test.tester.*
+import org.springframework.test.context.jdbc.*
+import org.testcontainers.containers.*
+import java.time.*
 
 @AutoConfigureHttpGraphQlTester
 @SpringBootTest

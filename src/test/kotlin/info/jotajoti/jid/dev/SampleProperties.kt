@@ -1,6 +1,6 @@
 package info.jotajoti.jid.dev
 
-import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.*
 
 @ConfigurationProperties(prefix = "samples")
 data class SampleProperties(
