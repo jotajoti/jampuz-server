@@ -1,12 +1,13 @@
 package info.jotajoti.jid.security
 
-import info.jotajoti.jid.admin.Admin
-import org.springframework.security.authentication.AbstractAuthenticationToken
-import org.springframework.security.core.authority.SimpleGrantedAuthority
+import info.jotajoti.jid.admin.*
+import org.springframework.security.authentication.*
+import org.springframework.security.core.authority.*
 
 val ADMIN_AUTHORITY = SimpleGrantedAuthority("ADMIN")
 
-class AdminAuthentication(val admin: Admin) : AbstractAuthenticationToken(listOf(ADMIN_AUTHORITY, PARTICIPANT_AUTHORITY)) {
+class AdminAuthentication(val admin: Admin) :
+    AbstractAuthenticationToken(listOf(ADMIN_AUTHORITY, PARTICIPANT_AUTHORITY)) {
 
     private val principal = AdminPrincipal(admin)
 

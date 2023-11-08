@@ -1,10 +1,9 @@
 package info.jotajoti.jid.participant
 
-import jakarta.validation.Valid
-import org.springframework.graphql.data.method.annotation.Argument
-import org.springframework.graphql.data.method.annotation.MutationMapping
-import org.springframework.stereotype.Controller
-import org.springframework.validation.annotation.Validated
+import jakarta.validation.*
+import org.springframework.graphql.data.method.annotation.*
+import org.springframework.stereotype.*
+import org.springframework.validation.annotation.*
 
 @Controller
 @Validated

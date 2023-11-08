@@ -1,13 +1,12 @@
 package info.jotajoti.jid.security
 
-import info.jotajoti.jid.admin.AdminRepository
-import info.jotajoti.jid.participant.ParticipantRepository
-import info.jotajoti.jid.security.SubjectType.ADMIN
-import info.jotajoti.jid.security.SubjectType.PARTICIPANT
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.crypto.bcrypt.BCrypt.hashpw
-import org.springframework.stereotype.Service
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.participant.*
+import info.jotajoti.jid.security.SubjectType.*
+import org.springframework.beans.factory.annotation.*
+import org.springframework.data.repository.*
+import org.springframework.security.crypto.bcrypt.BCrypt.*
+import org.springframework.stereotype.*
 
 @Service
 class SecurityService(

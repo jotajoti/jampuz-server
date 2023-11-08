@@ -1,13 +1,11 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.admin.AdminId
-import info.jotajoti.jid.admin.AdminRepository
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.participant.Participant
-import info.jotajoti.jid.security.AdminAuthentication
-import org.springframework.data.repository.findByIdOrNull
-import org.springframework.stereotype.Service
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.jidcode.*
+import info.jotajoti.jid.participant.*
+import info.jotajoti.jid.security.*
+import org.springframework.data.repository.*
+import org.springframework.stereotype.*
 
 @Service
 class LocationService(

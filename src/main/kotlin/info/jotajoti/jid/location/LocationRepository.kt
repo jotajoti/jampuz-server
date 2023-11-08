@@ -1,11 +1,9 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.participant.Participant
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.participant.*
+import org.springframework.data.jpa.repository.*
+import org.springframework.data.repository.query.*
 
 interface LocationRepository : JpaRepository<Location, LocationId> {
 

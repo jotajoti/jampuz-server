@@ -1,9 +1,8 @@
 package info.jotajoti.jid.admin
 
-import info.jotajoti.jid.security.SecurityService
-import org.springframework.graphql.data.method.annotation.Argument
-import org.springframework.graphql.data.method.annotation.MutationMapping
-import org.springframework.stereotype.Controller
+import info.jotajoti.jid.security.*
+import org.springframework.graphql.data.method.annotation.*
+import org.springframework.stereotype.*
 
 @Controller
 class AdminController(

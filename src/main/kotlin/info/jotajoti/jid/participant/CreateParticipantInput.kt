@@ -1,8 +1,7 @@
 package info.jotajoti.jid.participant
 
-import info.jotajoti.jid.location.LocationId
-import info.jotajoti.jid.location.ValidLocation
-import jakarta.validation.constraints.NotBlank
+import info.jotajoti.jid.location.*
+import jakarta.validation.constraints.*
 
 @UniqueNameAndLocation
 data class CreateParticipantInput(

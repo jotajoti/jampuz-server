@@ -1,7 +1,6 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.location.LocationId
-import info.jotajoti.jid.location.ValidLocation
+import info.jotajoti.jid.location.*
 
 data class RegisterFoundJidCodeInput(
 

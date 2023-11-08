@@ -1,11 +1,11 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.participant.Participant
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.jidcode.*
+import info.jotajoti.jid.participant.*
 import jakarta.persistence.*
-import org.hibernate.annotations.JdbcTypeCode
-import org.hibernate.type.SqlTypes
+import org.hibernate.annotations.*
+import org.hibernate.type.*
 import java.util.*
 
 typealias LocationId = UUID

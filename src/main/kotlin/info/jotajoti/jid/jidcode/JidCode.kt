@@ -1,17 +1,12 @@
 package info.jotajoti.jid.jidcode
 
-import jakarta.persistence.Embeddable
-import jakarta.persistence.Transient
-import jakarta.validation.Constraint
-import jakarta.validation.ConstraintValidator
-import jakarta.validation.ConstraintValidatorContext
-import jakarta.validation.Payload
+import jakarta.persistence.*
+import jakarta.validation.*
 import java.util.*
-import java.util.Locale.IsoCountryCode.PART1_ALPHA2
-import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.FIELD
-import kotlin.annotation.AnnotationTarget.FUNCTION
-import kotlin.reflect.KClass
+import java.util.Locale.IsoCountryCode.*
+import kotlin.annotation.AnnotationRetention.*
+import kotlin.annotation.AnnotationTarget.*
+import kotlin.reflect.*
 
 @Embeddable
 data class JidCode(

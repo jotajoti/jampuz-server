@@ -1,7 +1,6 @@
 package info.jotajoti.jid.build
 
-import java.io.FileReader
-import java.io.FileWriter
+import java.io.*
 import java.util.*
 
 // Used to update version.properties during releases
@@ -15,7 +14,10 @@ class CopyVersion(
 
         val versionProperties = Properties()
         versionProperties.setProperty("serverVersion", releaseProperties.getProperty(releaseProperty))
-        versionProperties.store(FileWriter("src/main/resources/version.properties"), "Auto-generated from release process")
+        versionProperties.store(
+            FileWriter("src/main/resources/version.properties"),
+            "Auto-generated from release process"
+        )
     }
 
     companion object {

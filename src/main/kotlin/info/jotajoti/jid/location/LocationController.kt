@@ -1,20 +1,14 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.admin.AdminId
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.security.AdminAuthentication
-import info.jotajoti.jid.security.IsOwnerOfLocation
-import info.jotajoti.jid.security.ParticipantAuthentication
-import info.jotajoti.jid.security.RequireAdmin
-import info.jotajoti.jid.util.toList
-import jakarta.validation.Valid
-import org.springframework.graphql.data.method.annotation.Argument
-import org.springframework.graphql.data.method.annotation.MutationMapping
-import org.springframework.graphql.data.method.annotation.QueryMapping
-import org.springframework.graphql.data.method.annotation.SchemaMapping
-import org.springframework.security.core.Authentication
-import org.springframework.stereotype.Controller
-import org.springframework.validation.annotation.Validated
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.jidcode.*
+import info.jotajoti.jid.security.*
+import info.jotajoti.jid.util.*
+import jakarta.validation.*
+import org.springframework.graphql.data.method.annotation.*
+import org.springframework.security.core.*
+import org.springframework.stereotype.*
+import org.springframework.validation.annotation.*
 
 @Controller
 @Validated

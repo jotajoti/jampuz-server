@@ -1,9 +1,8 @@
 package info.jotajoti.jid.participant
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.location.Location
-import info.jotajoti.jid.location.LocationId
-import org.springframework.data.jpa.repository.JpaRepository
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.location.*
+import org.springframework.data.jpa.repository.*
 
 interface ParticipantRepository : JpaRepository<Participant, ParticipantId> {
 

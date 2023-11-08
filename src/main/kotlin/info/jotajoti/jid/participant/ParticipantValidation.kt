@@ -1,12 +1,9 @@
 package info.jotajoti.jid.participant
 
-import jakarta.validation.Constraint
-import jakarta.validation.ConstraintValidator
-import jakarta.validation.ConstraintValidatorContext
-import jakarta.validation.Payload
-import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.CLASS
-import kotlin.reflect.KClass
+import jakarta.validation.*
+import kotlin.annotation.AnnotationRetention.*
+import kotlin.annotation.AnnotationTarget.*
+import kotlin.reflect.*
 
 @Target(CLASS)
 @Retention(RUNTIME)

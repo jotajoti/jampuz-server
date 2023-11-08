@@ -1,11 +1,8 @@
 package info.jotajoti.jid.location
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.jidcode.JidCode
-import info.jotajoti.jid.jidcode.ValidJidCode
-import jakarta.validation.constraints.Max
-import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.NotBlank
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.jidcode.*
+import jakarta.validation.constraints.*
 
 @UniqueCodeAndYear
 data class CreateLocationInput(

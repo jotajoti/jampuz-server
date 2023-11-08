@@ -1,8 +1,8 @@
 package info.jotajoti.jid
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.graphql.data.method.annotation.QueryMapping
-import org.springframework.stereotype.Controller
+import org.springframework.beans.factory.annotation.*
+import org.springframework.graphql.data.method.annotation.*
+import org.springframework.stereotype.*
 
 @Controller
 class QueryController(

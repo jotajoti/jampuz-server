@@ -1,13 +1,12 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.location.LocationId
-import info.jotajoti.jid.participant.ParticipantService
-import info.jotajoti.jid.security.AdminAuthentication
-import info.jotajoti.jid.security.ParticipantAuthentication
-import info.jotajoti.jid.subscription.SubscriptionService
-import org.springframework.data.domain.Example
-import org.springframework.security.core.Authentication
-import org.springframework.stereotype.Service
+import info.jotajoti.jid.location.*
+import info.jotajoti.jid.participant.*
+import info.jotajoti.jid.security.*
+import info.jotajoti.jid.subscription.*
+import org.springframework.data.domain.*
+import org.springframework.security.core.*
+import org.springframework.stereotype.*
 
 @Service
 class FoundJidCodeService(

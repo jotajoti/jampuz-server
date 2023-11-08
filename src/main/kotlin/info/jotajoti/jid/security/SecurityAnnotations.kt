@@ -1,10 +1,9 @@
 package info.jotajoti.jid.security
 
-import org.intellij.lang.annotations.Language
-import org.springframework.security.access.annotation.Secured
-import org.springframework.security.access.prepost.PreAuthorize
-import kotlin.annotation.AnnotationTarget.CLASS
-import kotlin.annotation.AnnotationTarget.FUNCTION
+import org.intellij.lang.annotations.*
+import org.springframework.security.access.annotation.*
+import org.springframework.security.access.prepost.*
+import kotlin.annotation.AnnotationTarget.*
 
 @Secured("ADMIN")
 @Target(CLASS, FUNCTION)

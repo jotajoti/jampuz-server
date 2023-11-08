@@ -1,12 +1,10 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.location.Location
-import info.jotajoti.jid.location.LocationId
-import info.jotajoti.jid.participant.Participant
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
-import java.util.UUID
+import info.jotajoti.jid.location.*
+import info.jotajoti.jid.participant.*
+import org.springframework.data.jpa.repository.*
+import org.springframework.data.repository.query.*
+import java.util.*
 
 interface FoundJidCodeRepository : JpaRepository<FoundJidCode, FoundJidCodeId> {
 
