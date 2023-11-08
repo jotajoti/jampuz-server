@@ -35,6 +35,8 @@ extend type Mutation {
 
 extend type Query {
     # Return null if not authenticated or if authentication is not a participant
-    authenticatedParticipant: Participant
+    # If locationCode is provided it will only return participant if the authenticated
+    # participant is associated with the location
+    authenticatedParticipant(locationCode: String, year: Int): Participant
 }
 

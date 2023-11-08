@@ -1,11 +1,10 @@
 package info.jotajoti.jid.participant
 
-import info.jotajoti.jid.admin.Admin
-import info.jotajoti.jid.location.Location
-import info.jotajoti.jid.location.LocationId
-import info.jotajoti.jid.location.LocationService
-import info.jotajoti.jid.security.PinCode
-import org.springframework.stereotype.Service
+import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.jidcode.*
+import info.jotajoti.jid.location.*
+import info.jotajoti.jid.security.*
+import org.springframework.stereotype.*
 
 @Service
 class ParticipantService(
@@ -26,15 +25,25 @@ class ParticipantService(
         return participantRepository.save(participant)
     }
 
-    fun getParticipantForAdmin(locationId: LocationId, admin: Admin) =
+    fun findParticipantForAdmin(admin: Admin, locationCode: JidCode, year: Int?) =
         locationService
-            .findByIdAndOwner(locationId, admin)
+            .findByOwnerAndCode(admin, locationCode, year)
             ?.let { location ->
                 participantRepository
                     .findFirstByAdminAndLocation(admin, location)
-                    ?: participantRepository.save(admin.toParticipant(location))
             }
-            ?: throw AdminNotInLocationException()
+
+    fun findParticipantForAdmin(locationId: LocationId, admin: Admin) =
+        locationService
+            .getByIdAndOwner(locationId, admin)
+            .let { location ->
+                participantRepository
+                    .findFirstByAdminAndLocation(admin, location)
+            }
+
+    fun getParticipantForAdmin(locationId: LocationId, admin: Admin) =
+        findParticipantForAdmin(locationId, admin)
+            ?: participantRepository.save(admin.toParticipant(locationService.getById(locationId)))
 
     private fun Admin.toParticipant(location: Location) =
         Participant(
@@ -44,5 +53,3 @@ class ParticipantService(
             location = location,
         )
 }
-
-class AdminNotInLocationException : Exception("Admin not part of location")

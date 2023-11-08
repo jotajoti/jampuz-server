@@ -13,6 +13,10 @@ interface LocationRepository : JpaRepository<Location, LocationId> {
 
     fun findFirstByCodeCodeIgnoreCaseAndYear(code: String, year: Int): Location?
 
+    fun findFirstByOwnersContainsAndCodeCodeIgnoreCaseOrderByYearDesc(admin: Admin, code: String): Location?
+
+    fun findFirstByOwnersContainsAndCodeCodeIgnoreCaseAndYear(admin: Admin, code: String, year: Int): Location?
+
 
     fun findAllByOwnersContains(owner: Admin): List<Location>
 

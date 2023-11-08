@@ -1,6 +1,8 @@
 package info.jotajoti.jid.security
 
-import info.jotajoti.jid.participant.Participant
+import info.jotajoti.jid.jidcode.JidCode
+import info.jotajoti.jid.location.LocationService
+import info.jotajoti.jid.participant.ParticipantService
 import info.jotajoti.jid.security.SubjectType.ADMIN
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Controller
 @Controller
 class SecurityController(
     private val securityService: SecurityService,
+    private val participantService: ParticipantService,
+    private val locationService: LocationService,
     private val jwtService: JwtService,
 ) {
 
@@ -29,8 +33,24 @@ class SecurityController(
     }
 
     @QueryMapping
-    fun authenticatedParticipant(authentication: Authentication) = when(authentication) {
-        is ParticipantAuthentication -> authentication.participant
-        else -> null
+    fun authenticatedParticipant(
+        @Argument locationCode: JidCode?,
+        @Argument year: Int?,
+        authentication: Authentication
+    ) =
+        when (authentication) {
+            is ParticipantAuthentication -> authentication.participant.takeIf {
+                locationCode == null || locationService.findByCode(locationCode, year)?.id == it.id
+            }
+
+            is AdminAuthentication -> locationCode?.let {
+                participantService.findParticipantForAdmin(
+                    authentication.admin,
+                    locationCode,
+                    year
+                )
+            }
+
+            else -> null
     }
 }

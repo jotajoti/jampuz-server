@@ -34,11 +34,7 @@ class LocationController(
 
     @QueryMapping
     fun locationByCode(@Argument code: JidCode, @Argument year: Int?) =
-        if (year != null) {
-            locationService.findByCodeAndYear(code, year)
-        } else {
-            locationService.findLatestByCode(code)
-        }
+        locationService.findByCode(code, year)
 
     @RequireAdmin
     @MutationMapping

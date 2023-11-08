@@ -3,10 +3,10 @@ package info.jotajoti.jid.exceptions
 import graphql.GraphQLError
 import graphql.execution.ResultPath.parse
 import info.jotajoti.jid.jidcode.CodeAlreadyRegisteredForParticipantException
+import info.jotajoti.jid.location.AdminNotInLocationException
 import info.jotajoti.jid.location.CannotAddSelfToLocation
 import info.jotajoti.jid.location.CannotRemoveSelfFromLocation
 import info.jotajoti.jid.location.LocationNotFoundException
-import info.jotajoti.jid.participant.AdminNotInLocationException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.graphql.data.method.annotation.GraphQlExceptionHandler
 import org.springframework.graphql.execution.ErrorType.*

@@ -21,11 +21,24 @@ class LocationService(
 
     fun findByParticipant(participant: Participant) = locationRepository.findByParticipant(participant)
 
-    fun findByIdAndOwner(locationId: LocationId, admin: Admin) = locationRepository.findByIdAndOwner(locationId, admin)
+    fun getByIdAndOwner(locationId: LocationId, admin: Admin) =
+        locationRepository.findByIdAndOwner(locationId, admin)
+            ?: throw AdminNotInLocationException()
 
-    fun findLatestByCode(jidCode: JidCode) = locationRepository.findFirstByCodeCodeIgnoreCaseOrderByYearDesc(jidCode.code)
+    fun findByCode(jidCode: JidCode, year: Int?) =
+        if (year == null) {
+            locationRepository.findFirstByCodeCodeIgnoreCaseOrderByYearDesc(jidCode.code)
+        } else {
+            locationRepository.findFirstByCodeCodeIgnoreCaseAndYear(jidCode.code, year)
+        }
 
-    fun findByCodeAndYear(jidCode: JidCode, year: Int) = locationRepository.findFirstByCodeCodeIgnoreCaseAndYear(jidCode.code, year)
+    fun findByOwnerAndCode(admin: Admin, jidCode: JidCode, year: Int?) =
+        findByCode(jidCode, year)
+            ?.also {
+                if (!it.owners.any { owner -> owner.id == admin.id }) {
+                    throw AdminNotInLocationException()
+                }
+            }
 
     fun createLocation(location: Location) =
         locationRepository.save(location)
@@ -68,6 +81,7 @@ class LocationService(
     }
 }
 
-class LocationNotFoundException(locationId: LocationId) : Exception("No location found with id $locationId")
+class AdminNotInLocationException : Exception("Admin not part of location")
 class CannotAddSelfToLocation : Exception("Cannot add yourself to a location")
 class CannotRemoveSelfFromLocation : Exception("Cannot remove yourself from a location")
+class LocationNotFoundException(locationId: LocationId) : Exception("No location found with id $locationId")
