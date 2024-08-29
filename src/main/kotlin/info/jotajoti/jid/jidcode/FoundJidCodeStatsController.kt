@@ -92,12 +92,22 @@ class FoundJidCodeStatsController(
             }
 
     private fun List<JidCode>?.toStats() = when (this) {
-        null -> JidCodeStats(0, 0, emptyList(), emptyList())
+        null -> JidCodeStats(0, 0, emptyList(), emptyList(), emptyList())
         else -> JidCodeStats(
             count = size,
             uniqueCount = toSet().size,
             uniqueCountries = map { it.country }.toSet().sorted(),
+            countryStats = toCountryStats(),
             uniqueRegions = map { it.region }.toSet().sorted(),
         )
     }
+
+    private fun List<JidCode>.toCountryStats() =
+        groupBy { it.country }
+            .map {
+                CountryStat(
+                    country = it.key,
+                    uniqueCount = it.value.toSet().size,
+                )
+            }
 }

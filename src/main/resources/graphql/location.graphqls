@@ -3,6 +3,12 @@ type Location {
     name: String!
     code: JidCode!
     year: Int!
+    # Returns true if year is latest for the code
+    isLatest: Boolean!
+    # Return previous years location
+    previous: Location
+    # Return next years location
+    next: Location
     owners: [Admin!]
 }
 
@@ -22,4 +28,8 @@ extend type Mutation {
     createLocation(input: CreateLocationInput!): Location
     addOwner(locationId: ID!, adminId: ID!): Location
     removeOwner(locationId: ID!, adminId: ID!): Location
+}
+
+extend type Subscription {
+    locationUpdated(locationId: ID!): Location
 }

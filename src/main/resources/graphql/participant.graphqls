@@ -1,6 +1,8 @@
 type Participant {
     id: ID!
     name: String!
+    # Pin code is only set if authenticated user is participant itself or an owner on the location
+    pinCode: String
     # If not null, means this participant is linked to the Admin user so the admin also can act as participant.
     admin: Admin
     location: Location!
@@ -24,7 +26,7 @@ input RegisterFoundJidCode {
 }
 
 extend type Location {
-    participants: [Participant!]
+    participants: [Participant!]!
 }
 
 extend type Mutation {
@@ -38,5 +40,9 @@ extend type Query {
     # If locationCode is provided it will only return participant if the authenticated
     # participant is associated with the location
     authenticatedParticipant(locationCode: String, year: Int): Participant
+}
+
+extend type Subscription {
+    participants(locationId: ID!): [Participant!]
 }
 

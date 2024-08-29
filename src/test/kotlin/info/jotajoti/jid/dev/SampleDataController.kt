@@ -7,13 +7,14 @@ import info.jotajoti.jid.jidcode.*
 import info.jotajoti.jid.location.*
 import info.jotajoti.jid.participant.*
 import info.jotajoti.jid.security.*
-import info.jotajoti.jid.security.SubjectType.*
+import info.jotajoti.jid.util.*
 import org.springframework.http.*
 import org.springframework.http.ResponseEntity.*
 import org.springframework.jdbc.core.*
 import org.springframework.web.bind.annotation.*
 import java.time.*
 import java.util.*
+import kotlin.collections.toList
 import kotlin.random.Random
 
 @RestController
@@ -23,12 +24,11 @@ class SampleDataController(
     private val locationRepository: LocationRepository,
     private val participantRepository: ParticipantRepository,
     private val foundJidCodeRepository: FoundJidCodeRepository,
-    private val jwtService: JwtService,
     private val jdbcTemplate: JdbcTemplate,
     private val securityService: SecurityService,
 ) {
 
-    @PostMapping("/sampledata")
+    @GetMapping("/sampledata")
     fun createSampleData(
         @RequestParam deleteExisting: Boolean = false,
         @RequestParam locale: Locale?
@@ -45,35 +45,35 @@ class SampleDataController(
 
         val faker = Faker.instance(locale ?: Locale.getDefault())
 
-        val users = createSampleUsers(faker)
-        val locations = createSampleLocations(faker, users)
+        val staticAdmin = createStaticAdmin()
+        val admins = mutableListOf(staticAdmin) + createSampleAdmins(faker)
+        val locations = createSampleLocations(faker, admins)
         val participants = createSampleParticipants(faker, locations)
         val jidCodes = createSampleJidCodes()
         createSampleFoundJidCodes(participants, jidCodes)
 
         return ok().body(
             mapOf(
-                "authKeys" to users.map {
-                    mapOf(it.id to jwtService.createToken(Subject(ADMIN, it.id!!)))
-                },
-                "locationOwners" to locations.map { location ->
-                    mapOf(location.id to location.owners.map { user -> user.id })
-                },
-                "sampleAuthKey" to locations
-                    .first()
-                    .let { location ->
-                        location
-                            .owners
-                            .first()
-                            .let { owner ->
-                                jwtService.createToken(Subject(ADMIN, owner.id!!))
-                            }
-                    }
+                "locationCodes" to locations.map {
+                    it.code.code
+                }.toSet(),
+                "firstAdmin" to admins.first(),
             )
         )
     }
 
-    private fun createSampleUsers(faker: Faker) = createSamples(sampleProperties.users) {
+    private fun createStaticAdmin() =
+        adminRepository.save(
+            Admin(
+                id = null,
+                name = "John Doe",
+                email = "john.doe@example.com",
+                passwordHash = securityService.hashPassword("john.doe123"),
+                locations = emptyList(),
+            )
+        )
+
+    private fun createSampleAdmins(faker: Faker) = createSamples(sampleProperties.users) {
         val name = faker.name()
         val firstName = name.firstName()
         val lastName = name.lastName()
@@ -85,33 +85,43 @@ class SampleDataController(
             passwordHash = securityService.hashPassword("${username}123"),
             locations = emptyList(),
         )
-        adminRepository.save(admin)
+        adminRepository.save(admin).toList()
     }
 
     private fun createUsername(firstName: String, lastName: String) =
         "${firstName.usernamify()}.${lastName.usernamify()}"
 
     private fun String.usernamify() =
-        replace("[' ]".toRegex(), "").lowercase(Locale.getDefault())
+        replace("[' ]".toRegex(), "")
+            .lowercase(Locale.getDefault())
+            .replace("æ", "ae")
+            .replace("ø", "oe")
+            .replace("å", "aa")
 
     private fun createSampleLocations(faker: Faker, admins: List<Admin>): List<Location> {
         val locations = createSamples(sampleProperties.locations) {
-            val owners = admins.random(3)
+            val owners = admins.random(2).toMutableSet()
+            owners += admins[0]
 
-            Location(
-                id = null,
-                name = faker.address().cityName(),
-                code = JidCode.random(),
-                year = LocalDate.now().year,
-                owners = owners,
-                participants = emptyList(),
-            )
+            val locationName = faker.address().cityName()
+            val jidCode = JidCode.random()
+
+            createSamples(sampleProperties.yearsPerLocation) { yearOffset ->
+                Location(
+                    id = null,
+                    name = locationName,
+                    code = jidCode,
+                    year = LocalDate.now().minusYears(yearOffset.toLong()).year,
+                    owners = owners.toList(),
+                    participants = emptyList(),
+                ).toList()
+            }
         }
         return locationRepository.saveAll(locations)
     }
 
     private fun createSampleParticipants(faker: Faker, locations: List<Location>) = locations.flatMap { location ->
-        val participants = createUnique(sampleProperties.participantsPerLocation) {
+        val participants = createUnique(sampleProperties.randomNumberOfParticipants()) {
             "${faker.name().firstName()} ${faker.name().lastName()}"
         }.map { name ->
             Participant(
@@ -124,12 +134,13 @@ class SampleDataController(
         participantRepository.saveAll(participants)
     }
 
-    private fun createSampleJidCodes() = createSamples(sampleProperties.jidCodes) { JidCode.random() }
+    private fun createSampleJidCodes() = createSamples(sampleProperties.jidCodes) { JidCode.random().toList() }
 
     private fun createSampleFoundJidCodes(participants: List<Participant>, jidCodes: List<JidCode>) =
         participants.flatMap { participant ->
             val jidCodesForParticipant =
-                jidCodes.random(Random.nextInt(sampleProperties.maxFoundJidCodesPerParticipant))
+                jidCodes.random(Random.nextInt(sampleProperties.randomNumberOfFoundJidCodes()))
+            java.util.Random().nextGaussian()
             val foundJidCodes = jidCodesForParticipant
                 .map {
                     FoundJidCode(
@@ -140,7 +151,7 @@ class SampleDataController(
             foundJidCodeRepository.saveAll(foundJidCodes)
         }
 
-    private fun <T> createSamples(count: Int, action: (Int) -> T): List<T> {
+    private fun <T> createSamples(count: Int, action: (Int) -> List<T>): List<T> {
         val samples = mutableListOf<T>()
         repeat(count) {
             samples += action(it)

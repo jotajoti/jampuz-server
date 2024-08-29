@@ -55,6 +55,26 @@ private fun createCountryCodeList() {
     println(countryCodes)
 }
 
+private fun printSimpleCountryList() {
+
+    val enUs = Locale.of("en_US")
+
+    val countryCodes = Locale
+        .getAvailableLocales()
+        .filter { it.country.isNotEmpty() }
+        .filter { it.country.matches("[a-zA-Z]{2}".toRegex()) }
+        .distinctBy { it.country }
+        .map {
+            "${it.getDisplayCountry(enUs)} = ${it.country.lowercase()}"
+        }
+        .sorted()
+        .joinToString(
+            separator = "\n"
+        )
+
+    println(countryCodes)
+}
+
 fun main() {
-    createCountryCodeList()
+    printSimpleCountryList()
 }

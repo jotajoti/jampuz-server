@@ -38,6 +38,21 @@ class LocationService(
                 }
             }
 
+    fun isLatest(location: Location) =
+        location.id == locationRepository.findFirstByCodeCodeIgnoreCaseOrderByYearDesc(location.code.code)?.id
+
+    fun findPrevious(currentLocation: Location) =
+        locationRepository.findFirstByCodeCodeIgnoreCaseAndYearLessThanOrderByYearDesc(
+            currentLocation.code.code,
+            currentLocation.year
+        )
+
+    fun findNext(currentLocation: Location) =
+        locationRepository.findFirstByCodeCodeIgnoreCaseAndYearGreaterThanOrderByYearAsc(
+            currentLocation.code.code,
+            currentLocation.year
+        )
+
     fun createLocation(location: Location) =
         locationRepository.save(location)
 

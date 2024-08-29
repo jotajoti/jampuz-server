@@ -25,6 +25,8 @@ class ParticipantService(
         return participantRepository.save(participant)
     }
 
+    fun findParticipantsForLocation(locationId: LocationId) = participantRepository.findByLocationId(locationId)
+
     fun findParticipantForAdmin(admin: Admin, locationCode: JidCode, year: Int?) =
         locationService
             .findByOwnerAndCode(admin, locationCode, year)

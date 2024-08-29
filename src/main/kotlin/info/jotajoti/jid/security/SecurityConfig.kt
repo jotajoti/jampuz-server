@@ -16,6 +16,7 @@ class SecurityConfig(private val jwtRequestFilter: JwtRequestFilter) {
     @Throws(Exception::class)
     fun springWebFilterChain(http: HttpSecurity): SecurityFilterChain = http
         .csrf { it.disable() }
+        .cors { it.disable() }
         .httpBasic { it.disable() }
         .authorizeHttpRequests { requests -> requests.anyRequest().permitAll() }
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)

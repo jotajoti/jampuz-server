@@ -28,6 +28,7 @@ class FoundJidCodeService(
         val savedJidCode = foundJidCodeRepository.save(foundJidCode)
 
         subscriptionService.publishMessage(JidCodeStatsSubscription(input.locationId))
+        subscriptionService.publishMessage(ParticipantsSubscription(input.locationId))
 
         return savedJidCode
     }

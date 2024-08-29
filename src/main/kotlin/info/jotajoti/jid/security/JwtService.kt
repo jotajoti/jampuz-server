@@ -4,16 +4,15 @@ import com.auth0.jwt.*
 import com.auth0.jwt.algorithms.*
 import com.auth0.jwt.exceptions.*
 import com.auth0.jwt.interfaces.*
-import org.springframework.beans.factory.annotation.*
 import org.springframework.stereotype.*
 import java.time.*
 import java.time.ZoneOffset.*
 import java.util.*
 
 @Service
-class JwtService(@Value("\${jwt.sharedSecret}") private val sharedSecret: String) {
+class JwtService(private val jwtProperties: JwtProperties) {
 
-    private val algorithm = Algorithm.HMAC512(sharedSecret)
+    private val algorithm = Algorithm.HMAC512(jwtProperties.sharedSecret)
     private val verifier = JWT
         .require(algorithm)
         .withIssuer("jid")
@@ -43,7 +42,7 @@ class JwtService(@Value("\${jwt.sharedSecret}") private val sharedSecret: String
             .create()
             .withIssuer("jid")
             .withSubject(subject.toString())
-            .withExpiresAt(LocalDateTime.now().plusMonths(1).toInstant(UTC))
+            .withExpiresAt(LocalDateTime.now().plusHours(jwtProperties.hoursValid).toInstant(UTC))
             .sign(algorithm)
 }
 

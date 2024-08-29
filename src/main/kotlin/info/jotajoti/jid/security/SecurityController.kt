@@ -17,6 +17,15 @@ class SecurityController(
 ) {
 
     @MutationMapping
+    fun authenticateParticipant(@Argument locationId: LocationId, @Argument name: String, @Argument pinCode: String) =
+        securityService
+            .authenticateParticipant(locationId, name, PinCode(pinCode))
+            ?.let {
+                jwtService.createToken(Subject(PARTICIPANT, it.id!!))
+            }
+
+
+    @MutationMapping
     fun authenticateAdmin(@Argument email: String, @Argument password: String) =
         securityService
             .authenticateAdmin(email, password)
@@ -37,7 +46,7 @@ class SecurityController(
         authentication: Authentication
     ) = when (authentication) {
         is ParticipantAuthentication -> authentication.participant.takeIf {
-            locationCode == null || locationService.findByCode(locationCode, year)?.id == it.id
+            locationCode == null || locationService.findByCode(locationCode, year)?.id == it.location.id
         }
 
         is AdminAuthentication -> locationCode?.let {

@@ -1,5 +1,6 @@
 package info.jotajoti.jid.dev
 
+import org.slf4j.*
 import org.springframework.boot.*
 import org.springframework.boot.context.properties.*
 import org.springframework.boot.devtools.restart.*
@@ -25,4 +26,12 @@ fun main(args: Array<String>) {
         .from(::springMain)
         .with(DevJidApplication::class.java)
         .run(*args)
+        .applicationContext
+        .getBean(MySQLContainer::class.java)
+        .also {
+            LoggerFactory
+                .getLogger(DevJidApplication::class.java)
+                .info("MySQL started on port ${it.firstMappedPort}")
+        }
+
 }

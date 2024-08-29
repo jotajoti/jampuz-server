@@ -11,12 +11,11 @@ interface LocationRepository : JpaRepository<Location, LocationId> {
 
     fun findFirstByCodeCodeIgnoreCaseAndYear(code: String, year: Int): Location?
 
-    fun findFirstByOwnersContainsAndCodeCodeIgnoreCaseOrderByYearDesc(admin: Admin, code: String): Location?
-
-    fun findFirstByOwnersContainsAndCodeCodeIgnoreCaseAndYear(admin: Admin, code: String, year: Int): Location?
-
-
     fun findAllByOwnersContains(owner: Admin): List<Location>
+
+    fun findFirstByCodeCodeIgnoreCaseAndYearLessThanOrderByYearDesc(code: String, year: Int): Location?
+
+    fun findFirstByCodeCodeIgnoreCaseAndYearGreaterThanOrderByYearAsc(code: String, year: Int): Location?
 
     @Query("SELECT p.location FROM Participant p WHERE p = :participant")
     fun findByParticipant(@Param("participant") participant: Participant): Location?

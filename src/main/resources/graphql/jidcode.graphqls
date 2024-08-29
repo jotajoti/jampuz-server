@@ -16,12 +16,21 @@ type JidCode {
 }
 
 type JidCodeStats {
+    id: ID!
     count: Int!
     uniqueCount: Int!
     uniqueCountryCount: Int!
+    countryStats: [CountryStat!]!
     uniqueCountries: [String!]!
     uniqueRegionCount: Int!
     uniqueRegions: [Region!]!
+}
+
+type CountryStat {
+    id: ID!
+    # A lowercase [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code
+    country: String!
+    uniqueCount: Int!
 }
 
 extend type Participant {

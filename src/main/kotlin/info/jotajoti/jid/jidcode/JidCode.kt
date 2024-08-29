@@ -40,18 +40,6 @@ data class JidCode(
         get() = code.lowercase().substring(1, 3)
 }
 
-fun String.toJidCode() = JidCode(this)
-
-enum class Region(val code: Int) {
-    AFRICA(1),
-    ARAB(2),
-    ASIA_PACIFIC(3),
-    EUROASIA(4),
-    EUROPE(5),
-    INTERAMERICA(6),
-    SPECIAL(7)
-}
-
 @Target(FUNCTION, FIELD)
 @Retention(RUNTIME)
 @Constraint(validatedBy = [ValidJidCodeValidator::class])

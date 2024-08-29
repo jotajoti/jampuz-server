@@ -1,6 +1,7 @@
 package info.jotajoti.jid.security
 
 import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.location.*
 import info.jotajoti.jid.participant.*
 import info.jotajoti.jid.security.SubjectType.*
 import org.springframework.beans.factory.annotation.*
@@ -19,6 +20,10 @@ class SecurityService(
     fun authenticateAdmin(email: String, password: String) =
         adminRepository
             .findFirstByEmailAndPasswordHash(email, hashPassword(password))
+
+    fun authenticateParticipant(locationId: LocationId, name: String, pinCode: PinCode) =
+        participantRepository
+            .findFirstByLocationIdAndNameAndPinCode(locationId, name, pinCode.value)
 
     fun getAuthentication(subject: Subject) = when (subject.type) {
         ADMIN -> subject.getAdminAuthentication()
