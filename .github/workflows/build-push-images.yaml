@@ -71,6 +71,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Deploy to Oracle Cloud
-        uses: jotajoti/jid-deploy/.github/workflows/deploy-to-oracle-cloud.yml@main
-        if: startsWith(github.event.ref, 'refs/tags/v')
+  deploy-to-oracle-cloud:
+    uses: jotajoti/jid-deploy/.github/workflows/deploy-to-oracle-cloud.yml@main
+    needs: push-image
+    if: startsWith(github.event.ref, 'refs/tags/v')
