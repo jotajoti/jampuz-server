@@ -11,6 +11,8 @@ RUN ./mvnw package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
 
+RUN apk --no-cache add curl
+
 COPY --from=builder /workspace/app/target/*.jar /app/jid-server.jar
 
 EXPOSE 8080
