@@ -70,3 +70,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Deploy to Oracle Cloud
+        uses: jotajoti/jid-deploy/.github/workflows/deploy-to-oracle-cloud.yml@main
+        if: startsWith(github.event.ref, 'refs/tags/v')
