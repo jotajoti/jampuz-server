@@ -75,3 +75,4 @@ jobs:
     uses: jotajoti/jid-deploy/.github/workflows/deploy-to-oracle-cloud.yml@main
     needs: push-image
     if: startsWith(github.event.ref, 'refs/tags/v')
+    secrets: inherit
