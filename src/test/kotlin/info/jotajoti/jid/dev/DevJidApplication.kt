@@ -1,13 +1,14 @@
 package info.jotajoti.jid.dev
 
-import org.slf4j.*
-import org.springframework.boot.*
-import org.springframework.boot.context.properties.*
-import org.springframework.boot.devtools.restart.*
-import org.springframework.boot.test.context.*
-import org.springframework.boot.testcontainers.service.connection.*
-import org.springframework.context.annotation.*
-import org.testcontainers.containers.*
+import org.slf4j.LoggerFactory
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.devtools.restart.RestartScope
+import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection
+import org.springframework.context.annotation.Bean
+import org.testcontainers.containers.GenericContainer
+import org.testcontainers.containers.MySQLContainer
 import info.jotajoti.jid.main as springMain
 
 @TestConfiguration
@@ -19,6 +20,15 @@ class DevJidApplication {
     @ServiceConnection
     fun mySQLContainer() =
         MySQLContainer("mysql:8")
+
+    @Bean
+    @RestartScope
+    @ServiceConnection("openzipkin/zipkin")
+    fun zipkinContainer() =
+        GenericContainer("openzipkin/zipkin").apply {
+            addExposedPorts(9411)
+        }
+
 }
 
 fun main(args: Array<String>) {
@@ -27,11 +37,22 @@ fun main(args: Array<String>) {
         .with(DevJidApplication::class.java)
         .run(*args)
         .applicationContext
-        .getBean(MySQLContainer::class.java)
-        .also {
-            LoggerFactory
-                .getLogger(DevJidApplication::class.java)
-                .info("MySQL started on port ${it.firstMappedPort}")
+        .also { context ->
+            context
+                .getBean(MySQLContainer::class.java)
+                .also {
+                    LoggerFactory
+                        .getLogger(DevJidApplication::class.java)
+                        .info("MySQL started on port ${it.firstMappedPort}")
+                }
+
+            context
+                .getBean("zipkinContainer", GenericContainer::class.java)
+                .also {
+                    LoggerFactory
+                        .getLogger(DevJidApplication::class.java)
+                        .info("Zipkin started on port ${it.firstMappedPort}: http://localhost:${it.firstMappedPort}/")
+                }
         }
 
 }
