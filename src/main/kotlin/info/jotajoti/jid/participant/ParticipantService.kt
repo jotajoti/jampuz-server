@@ -1,57 +1,57 @@
 package info.jotajoti.jid.participant
 
 import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.jidcode.*
-import info.jotajoti.jid.location.*
 import info.jotajoti.jid.security.*
 import org.springframework.stereotype.*
 
 @Service
 class ParticipantService(
     private val participantRepository: ParticipantRepository,
-    private val locationService: LocationService,
+    private val eventService: EventService,
 ) {
 
     fun createParticipant(input: CreateParticipantInput): Participant {
 
-        val location = locationService.getById(input.locationId)
+        val event = eventService.getById(input.eventId)
 
         val participant = Participant(
             name = input.name,
             pinCode = PinCode.random(),
-            location = location,
+            event = event,
         )
 
         return participantRepository.save(participant)
     }
 
-    fun findParticipantsForLocation(locationId: LocationId) = participantRepository.findByLocationId(locationId)
+    fun findParticipantsForEvent(eventId: EventId) = participantRepository.findByEventId(eventId)
 
-    fun findParticipantForAdmin(admin: Admin, locationCode: JidCode, year: Int?) =
-        locationService
-            .findByOwnerAndCode(admin, locationCode, year)
-            ?.let { location ->
+    fun findParticipantForAdmin(admin: Admin, eventJidCode: JidCode, year: Int?) =
+        eventService
+            .findByOwnerAndCode(admin, eventJidCode, year)
+            ?.let { event ->
                 participantRepository
-                    .findFirstByAdminAndLocation(admin, location)
+                    .findFirstByAdminAndEvent(admin, event)
             }
 
-    fun findParticipantForAdmin(locationId: LocationId, admin: Admin) =
-        locationService
-            .getByIdAndOwner(locationId, admin)
-            .let { location ->
+    fun findParticipantForAdmin(eventId: EventId, admin: Admin) =
+        eventService
+            .getByIdAndOwner(eventId, admin)
+            .let { event ->
                 participantRepository
-                    .findFirstByAdminAndLocation(admin, location)
+                    .findFirstByAdminAndEvent(admin, event)
             }
 
-    fun getParticipantForAdmin(locationId: LocationId, admin: Admin) =
-        findParticipantForAdmin(locationId, admin)
-            ?: participantRepository.save(admin.toParticipant(locationService.getById(locationId)))
+    fun getParticipantForAdmin(eventId: EventId, admin: Admin) =
+        findParticipantForAdmin(eventId, admin)
+            ?: participantRepository.save(admin.toParticipant(eventService.getById(eventId)))
 
-    private fun Admin.toParticipant(location: Location) =
+    private fun Admin.toParticipant(event: Event) =
         Participant(
             name = name,
             pinCode = PinCode.random(),
             admin = this,
-            location = location,
+            event = event,
         )
 }

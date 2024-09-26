@@ -1,7 +1,7 @@
 package info.jotajoti.jid.security
 
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.jidcode.*
-import info.jotajoti.jid.location.*
 import info.jotajoti.jid.participant.*
 import info.jotajoti.jid.security.SubjectType.*
 import org.springframework.graphql.data.method.annotation.*
@@ -12,14 +12,14 @@ import org.springframework.stereotype.*
 class SecurityController(
     private val securityService: SecurityService,
     private val participantService: ParticipantService,
-    private val locationService: LocationService,
+    private val eventService: EventService,
     private val jwtService: JwtService,
 ) {
 
     @MutationMapping
-    fun authenticateParticipant(@Argument locationId: LocationId, @Argument name: String, @Argument pinCode: String) =
+    fun authenticateParticipant(@Argument eventId: EventId, @Argument name: String, @Argument pinCode: String) =
         securityService
-            .authenticateParticipant(locationId, name, PinCode(pinCode))
+            .authenticateParticipant(eventId, name, PinCode(pinCode))
             ?.let {
                 jwtService.createToken(Subject(PARTICIPANT, it.id!!))
             }
@@ -46,7 +46,7 @@ class SecurityController(
         authentication: Authentication
     ) = when (authentication) {
         is ParticipantAuthentication -> authentication.participant.takeIf {
-            locationCode == null || locationService.findByCode(locationCode, year)?.id == it.location.id
+            locationCode == null || eventService.findByCode(locationCode, year)?.id == it.event.id
         }
 
         is AdminAuthentication -> locationCode?.let {

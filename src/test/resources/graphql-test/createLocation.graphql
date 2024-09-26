@@ -1,5 +1,0 @@
-mutation CreateLocation($name: String!, $code: String!, $year: Int!) {
-    createLocation(input: {name: $name, code: $code, year: $year}) {
-        id
-    }
-}

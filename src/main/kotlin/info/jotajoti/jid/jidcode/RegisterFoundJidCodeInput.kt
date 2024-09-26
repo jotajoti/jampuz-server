@@ -1,12 +1,12 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.location.*
+import info.jotajoti.jid.event.*
 
 data class RegisterFoundJidCodeInput(
 
     @ValidJidCode
     val code: String,
 
-    @ValidLocation
-    val locationId: LocationId,
+    @ValidEvent
+    val eventId: EventId,
 )

@@ -3,6 +3,7 @@ package info.jotajoti.jid.dev
 import com.github.javafaker.*
 import info.jotajoti.jid.*
 import info.jotajoti.jid.admin.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.jidcode.*
 import info.jotajoti.jid.location.*
 import info.jotajoti.jid.participant.*
@@ -22,6 +23,7 @@ class SampleDataController(
     private val sampleProperties: SampleProperties,
     private val adminRepository: AdminRepository,
     private val locationRepository: LocationRepository,
+    private val eventRepository: EventRepository,
     private val participantRepository: ParticipantRepository,
     private val foundJidCodeRepository: FoundJidCodeRepository,
     private val jdbcTemplate: JdbcTemplate,
@@ -37,6 +39,7 @@ class SampleDataController(
             jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS=0")
             jdbcTemplate.execute("TRUNCATE TABLE found_jid_code")
             jdbcTemplate.execute("TRUNCATE TABLE participant")
+            jdbcTemplate.execute("TRUNCATE TABLE event")
             jdbcTemplate.execute("TRUNCATE TABLE location_owner")
             jdbcTemplate.execute("TRUNCATE TABLE location")
             jdbcTemplate.execute("TRUNCATE TABLE admin")
@@ -48,13 +51,14 @@ class SampleDataController(
         val staticAdmin = createStaticAdmin()
         val admins = mutableListOf(staticAdmin) + createSampleAdmins(faker)
         val locations = createSampleLocations(faker, admins)
-        val participants = createSampleParticipants(faker, locations)
+        val events = createSampleEvents(locations)
+        val participants = createSampleParticipants(faker, events)
         val jidCodes = createSampleJidCodes()
         createSampleFoundJidCodes(participants, jidCodes)
 
         return ok().body(
             mapOf(
-                "locationCodes" to locations.map {
+                "eventCodes" to events.map {
                     it.code.code
                 }.toSet(),
                 "firstAdmin" to admins.first(),
@@ -104,30 +108,40 @@ class SampleDataController(
             owners += admins[0]
 
             val locationName = faker.address().cityName()
-            val jidCode = JidCode.random()
 
-            createSamples(sampleProperties.yearsPerLocation) { yearOffset ->
-                Location(
-                    id = null,
-                    name = locationName,
-                    code = jidCode,
-                    year = LocalDate.now().minusYears(yearOffset.toLong()).year,
-                    owners = owners.toList(),
-                    participants = emptyList(),
-                ).toList()
-            }
+            Location(
+                id = null,
+                name = locationName,
+                owners = owners.toList(),
+            ).toList()
         }
         return locationRepository.saveAll(locations)
     }
 
-    private fun createSampleParticipants(faker: Faker, locations: List<Location>) = locations.flatMap { location ->
+    private fun createSampleEvents(locations: List<Location>): List<Event> {
+        val events = locations.flatMap { location ->
+
+            createSamples(sampleProperties.yearsPerLocation) { yearOffset ->
+                Event(
+                    id = null,
+                    location = location,
+                    code = JidCode.random(),
+                    year = LocalDate.now().minusYears(yearOffset.toLong()).year,
+                    participants = emptyList(),
+                ).toList()
+            }
+        }
+        return eventRepository.saveAll(events)
+    }
+
+    private fun createSampleParticipants(faker: Faker, events: List<Event>) = events.flatMap { event ->
         val participants = createUnique(sampleProperties.randomNumberOfParticipants()) {
             "${faker.name().firstName()} ${faker.name().lastName()}"
         }.map { name ->
             Participant(
                 name = name,
                 pinCode = PinCode.random(),
-                location = location,
+                event = event,
                 foundJidCodes = emptyList(),
             )
         }

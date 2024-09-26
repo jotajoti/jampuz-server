@@ -10,73 +10,23 @@ import org.junit.jupiter.api.*
 class LocationControllerIntegrationTests : GraphQLIntegrationTests() {
 
     @Nested
-    inner class GetLocationByCodeTests {
-
-        @Test
-        fun `should return newest location by code`() {
-
-            val code = testLocation.code.code
-
-            executeAdminQuery(
-                """
-                    query GetLocationByCode {
-                        locationByCode(code: "$code") {
-                            id
-                            name
-                            code {
-                                value
-                                country
-                                region
-                            }
-                        }                        
-                    }
-                """.trimIndent()
-            )
-                .path("locationByCode.id").isEqualTo(testLocation.id)
-                .path("locationByCode.name").isEqualTo(testLocation.name)
-                .path("locationByCode.code.value").isEqualTo(testLocation.code.code)
-                .path("locationByCode.code.country").isEqualTo(testLocation.code.country)
-                .path("locationByCode.code.region").isEqualTo(testLocation.code.region)
-        }
-    }
-
-    @Nested
     inner class CreateLocationTests {
 
         @Test
         fun `should create location`() {
 
-            val jidCode = JidCode.random().code
-
             executeAdminQuery(
                 """
                     mutation CreateLocation {
-                        createLocation(input: { name: "Location 2", code: "$jidCode", year: 2023 }) {
+                        createLocation(input: { name: "Location 2" }) {
                             id
+                            name
                         }
                     }
                 """.trimIndent()
             )
                 .path("createLocation.id").hasValue()
-        }
-
-        @Test
-        fun `should not be allowed to create location with same code and year`() {
-
-            val jidCode = testLocation.code.code
-            val year = testLocation.year
-
-            executeAdminQueryName(
-                "createLocation",
-                testAdmins[0].id!!,
-                "name" to "Location 1",
-                "code" to jidCode,
-                "year" to year
-            )
-                .errors()
-                .expect {
-                    it.message == "A location with the same code and year is already created"
-                }
+                .path("createLocation.name").isEqualTo("Location 2")
         }
     }
 

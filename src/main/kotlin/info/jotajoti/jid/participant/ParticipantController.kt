@@ -1,7 +1,7 @@
 package info.jotajoti.jid.participant
 
 import graphql.*
-import info.jotajoti.jid.location.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.security.*
 import info.jotajoti.jid.subscription.*
 import jakarta.validation.*
@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.*
 @Validated
 class ParticipantController(
     private val participantService: ParticipantService,
-    private val locationService: LocationService,
+    private val eventService: EventService,
     private val subscriptionService: SubscriptionService,
 ) {
 
@@ -24,8 +24,8 @@ class ParticipantController(
         authentication: Authentication,
         @ContextValue(required = false) participantCreationContext: ParticipantCreationContext?
     ) = when (authentication) {
-        is AdminAuthentication -> locationService
-            .getByIdAndOwner(participant.location.id!!, authentication.admin)
+        is AdminAuthentication -> eventService
+            .getByIdAndOwner(participant.event.id!!, authentication.admin)
             .let { participant.pinCode }
 
         is ParticipantAuthentication -> participant
@@ -39,7 +39,6 @@ class ParticipantController(
             .pinCode
             .takeIf { participantCreationContext?.createdParticipantId == participant.id }
     }
-        ?.value
 
     @MutationMapping
     fun createParticipant(@Valid @Argument input: CreateParticipantInput, graphQlContext: GraphQLContext) =
@@ -50,15 +49,15 @@ class ParticipantController(
             }
             .also {
                 subscriptionService
-                    .publishMessage(ParticipantsSubscription(it.location.id!!))
+                    .publishMessage(ParticipantsSubscription(it.event.id!!))
             }
 
     @SubscriptionMapping
-    fun participants(@Argument locationId: LocationId) =
+    fun participants(@Argument eventId: EventId) =
         subscriptionService
             .subscribe(ParticipantsSubscription::class)
             .map {
-                participantService.findParticipantsForLocation(it.locationId)
+                participantService.findParticipantsForEvent(it.eventId)
             }
 
 }

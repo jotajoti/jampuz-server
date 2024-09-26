@@ -1,0 +1,5 @@
+mutation CreateEvent($locationId: ID!, $code: String!, $year: Int!) {
+    createEvent(input: {locationId: $locationId, code: $code, year: $year}) {
+        id
+    }
+}

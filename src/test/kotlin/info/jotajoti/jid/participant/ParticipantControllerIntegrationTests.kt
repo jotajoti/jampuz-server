@@ -11,13 +11,13 @@ class ParticipantControllerIntegrationTests : GraphQLIntegrationTests() {
         @Test
         fun `should create participant`() {
 
-            val locationId = testLocation.id!!
+            val eventId = testEvent.id!!
 
             executeAnonymousQuery(
                 """
             mutation CreateParticipant {
                 createParticipant(
-                    input: { name: "Participant XYZ", locationId: "$locationId" }
+                    input: { name: "Participant XYZ", eventId: "$eventId" }
                 ) {
                     id
                     name
@@ -32,13 +32,13 @@ class ParticipantControllerIntegrationTests : GraphQLIntegrationTests() {
         @Test
         fun `should not be allowed to create participant with duplicate name in location`() {
 
-            val locationId = testLocation.id!!
+            val eventId = testEvent.id!!
 
             executeAnonymousQuery(
                 """
             mutation CreateParticipant {
                 createParticipant(
-                    input: { name: "Participant 1", locationId: "$locationId" }
+                    input: { name: "Participant 1", eventId: "$eventId" }
                 ) {
                     id
                 }
@@ -47,7 +47,7 @@ class ParticipantControllerIntegrationTests : GraphQLIntegrationTests() {
             )
                 .errors()
                 .expect {
-                    it.message == "A participant with the same name already exists in the location"
+                    it.message == "A participant with the same name already exists in the event"
                 }
         }
     }

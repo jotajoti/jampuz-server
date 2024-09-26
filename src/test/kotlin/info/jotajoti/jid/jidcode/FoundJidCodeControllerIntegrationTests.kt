@@ -19,7 +19,7 @@ class FoundJidCodeControllerIntegrationTests : GraphQLIntegrationTests() {
             executeParticipantQuery(
                 """
                     mutation RegisterFoundJidCode {
-                        registerFoundJidCode(input: {code: "$jidCode", locationId: "${testLocation.id!!}"}) {
+                        registerFoundJidCode(input: {code: "$jidCode", eventId: "${testEvent.id!!}"}) {
                             id
                             participant {
                                 id                            
@@ -43,7 +43,7 @@ class FoundJidCodeControllerIntegrationTests : GraphQLIntegrationTests() {
             executeAdminQuery(
                 """
                     mutation RegisterFoundJidCode {
-                        registerFoundJidCode(input: {code: "$jidCode", locationId: "${testLocation.id!!}"}) {
+                        registerFoundJidCode(input: {code: "$jidCode", eventId: "${testEvent.id!!}"}) {
                             id
                             participant {
                                 admin {
@@ -67,7 +67,7 @@ class FoundJidCodeControllerIntegrationTests : GraphQLIntegrationTests() {
             executeAnonymousQuery(
                 """
                     mutation RegisterFoundJidCode {
-                        registerFoundJidCode(input: {code: "$jidCode", locationId: "${testLocation.id!!}"}) {
+                        registerFoundJidCode(input: {code: "$jidCode", eventId: "${testEvent.id!!}"}) {
                             id
                             participant {
                                 id                            
@@ -92,7 +92,7 @@ class FoundJidCodeControllerIntegrationTests : GraphQLIntegrationTests() {
             executeAdminQuery(
                 """
                     mutation RegisterFoundJidCode {
-                        registerFoundJidCode(input: {code: "$jidCode", locationId: "${testLocation.id!!}"}) {
+                        registerFoundJidCode(input: {code: "$jidCode", eventId: "${testEvent.id!!}"}) {
                             id
                             participant {
                                 admin {

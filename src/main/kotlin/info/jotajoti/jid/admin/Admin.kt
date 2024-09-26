@@ -3,17 +3,15 @@ package info.jotajoti.jid.admin
 import info.jotajoti.jid.location.*
 import jakarta.persistence.*
 import jakarta.persistence.FetchType.*
+import jakarta.persistence.GenerationType.*
 import org.hibernate.annotations.*
-import org.hibernate.type.SqlTypes.*
-import java.util.*
-
-typealias AdminId = UUID
+import org.hibernate.type.*
 
 @Entity
 data class Admin(
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(VARCHAR)
+    @GeneratedValue(strategy = UUID)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     val id: AdminId? = null,
 
     var name: String,

@@ -25,7 +25,7 @@ input RegisterFoundJidCode {
     eventId: ID!
 }
 
-extend type Location {
+extend type Event {
     participants: [Participant!]!
 }
 

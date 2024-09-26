@@ -3,6 +3,7 @@ package info.jotajoti.jid.test
 import info.jotajoti.jid.*
 import info.jotajoti.jid.admin.*
 import info.jotajoti.jid.dev.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.jidcode.*
 import info.jotajoti.jid.location.*
 import info.jotajoti.jid.participant.*
@@ -47,6 +48,9 @@ abstract class GraphQLIntegrationTests {
     lateinit var locationRepository: LocationRepository
 
     @Autowired
+    lateinit var eventRepository: EventRepository
+
+    @Autowired
     lateinit var participantRepository: ParticipantRepository
 
     @Autowired
@@ -57,6 +61,7 @@ abstract class GraphQLIntegrationTests {
 
     val testAdmins = mutableListOf<Admin>()
     lateinit var testLocation: Location
+    lateinit var testEvent: Event
     val testParticipants = mutableListOf<Participant>()
 
     @BeforeEach
@@ -77,9 +82,15 @@ abstract class GraphQLIntegrationTests {
         testLocation = locationRepository.save(
             Location(
                 name = "Location 1",
+                owners = listOf(testAdmins[0], testAdmins[1]),
+            )
+        )
+
+        testEvent = eventRepository.save(
+            Event(
+                location = testLocation,
                 code = JidCode.random(),
                 year = LocalDate.now().year,
-                owners = listOf(testAdmins[0], testAdmins[1]),
             )
         )
 
@@ -88,7 +99,7 @@ abstract class GraphQLIntegrationTests {
                 Participant(
                     name = "Participant $it",
                     pinCode = PinCode.random(),
-                    location = testLocation,
+                    event = testEvent,
                 )
             )
         }

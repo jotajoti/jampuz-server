@@ -1,7 +1,7 @@
 package info.jotajoti.jid.participant
 
-import info.jotajoti.jid.location.*
+import info.jotajoti.jid.event.*
 
 data class ParticipantsSubscription(
-    val locationId: LocationId,
+    val eventId: EventId,
 )

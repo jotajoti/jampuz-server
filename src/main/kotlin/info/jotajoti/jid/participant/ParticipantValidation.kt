@@ -7,20 +7,20 @@ import kotlin.reflect.*
 
 @Target(CLASS)
 @Retention(RUNTIME)
-@Constraint(validatedBy = [UniqueNameAndLocationValidator::class])
-annotation class UniqueNameAndLocation(
-    val message: String = "A participant with the same name already exists in the location",
+@Constraint(validatedBy = [UniqueNameAndEventValidator::class])
+annotation class UniqueNameAndEvent(
+    val message: String = "A participant with the same name already exists in the event",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = []
 )
 
-class UniqueNameAndLocationValidator(
+class UniqueNameAndEventValidator(
     private val participantRepository: ParticipantRepository,
-) : ConstraintValidator<UniqueNameAndLocation, CreateParticipantInput> {
+) : ConstraintValidator<UniqueNameAndEvent, CreateParticipantInput> {
 
     override fun isValid(createParticipantInput: CreateParticipantInput, context: ConstraintValidatorContext?) =
-        participantRepository.findFirstByNameAndLocationId(
+        participantRepository.findFirstByNameAndEventId(
             createParticipantInput.name,
-            createParticipantInput.locationId
+            createParticipantInput.eventId
         ) == null
 }

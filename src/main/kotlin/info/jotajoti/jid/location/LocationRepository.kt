@@ -7,18 +7,7 @@ import org.springframework.data.repository.query.*
 
 interface LocationRepository : JpaRepository<Location, LocationId> {
 
-    fun findFirstByCodeCodeIgnoreCaseOrderByYearDesc(code: String): Location?
-
-    fun findFirstByCodeCodeIgnoreCaseAndYear(code: String, year: Int): Location?
-
     fun findAllByOwnersContains(owner: Admin): List<Location>
-
-    fun findFirstByCodeCodeIgnoreCaseAndYearLessThanOrderByYearDesc(code: String, year: Int): Location?
-
-    fun findFirstByCodeCodeIgnoreCaseAndYearGreaterThanOrderByYearAsc(code: String, year: Int): Location?
-
-    @Query("SELECT p.location FROM Participant p WHERE p = :participant")
-    fun findByParticipant(@Param("participant") participant: Participant): Location?
 
     @Query("SELECT l FROM Admin a JOIN a.locations l WHERE a = :owner AND l.id = :id")
     fun findByIdAndOwner(@Param("id") id: LocationId, @Param("owner") owner: Admin): Location?

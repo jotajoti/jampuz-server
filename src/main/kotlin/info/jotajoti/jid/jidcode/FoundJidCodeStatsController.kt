@@ -1,6 +1,6 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.location.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.participant.*
 import info.jotajoti.jid.subscription.*
 import org.dataloader.*
@@ -9,7 +9,6 @@ import org.springframework.graphql.execution.*
 import org.springframework.stereotype.*
 import reactor.core.publisher.*
 import java.util.concurrent.*
-
 
 @Controller
 class FoundJidCodeStatsController(
@@ -41,43 +40,43 @@ class FoundJidCodeStatsController(
             }
 
         batchLoaderRegistry
-            .forName<Location, MutableList<JidCode>>("jidCodesForLocationsLoader")
+            .forName<Event, MutableList<JidCode>>("jidCodesForEventsLoader")
             .withOptions {
                 it.setMaxBatchSize(100)
             }
-            .registerMappedBatchLoader { locations, _ ->
-                val locationLookupMap = locations.associateBy { it.id }
-                val jidCodesForLocations = mutableMapOf<Location, MutableList<JidCode>>()
+            .registerMappedBatchLoader { events, _ ->
+                val eventLookupMap = events.associateBy { it.id }
+                val jidCodesForEvents = mutableMapOf<Event, MutableList<JidCode>>()
 
                 foundJidCodeRepository
-                    .getJidCodesForLocations(locations)
+                    .getJidCodesForEvents(events)
                     .forEach { associatedCode ->
-                        val location = locationLookupMap.getValue(associatedCode.id)
-                        jidCodesForLocations.getOrPut(location) {
+                        val event = eventLookupMap.getValue(associatedCode.id)
+                        jidCodesForEvents.getOrPut(event) {
                             mutableListOf()
                         } += associatedCode.code
                     }
 
-                Mono.just(jidCodesForLocations)
+                Mono.just(jidCodesForEvents)
             }
     }
 
     @SubscriptionMapping
-    fun jidCodeStats(@Argument locationId: LocationId) =
+    fun jidCodeStats(@Argument eventId: EventId) =
         subscriptionService
             .subscribe(JidCodeStatsSubscription::class)
             .map {
                 foundJidCodeRepository
-                    .findFoundJidCodesByParticipantLocationId(it.locationId)
+                    .findFoundJidCodesByParticipantEventId(it.eventId)
                     .map { it.code }
                     .toStats()
             }
 
     @SchemaMapping
     fun jidCodeStats(
-        location: Location,
-        jidCodesForLocationsLoader: DataLoader<Location, List<JidCode>>
-    ) = jidCodesForLocationsLoader.loadStats(location)
+        event: Event,
+        jidCodesForEventsLoader: DataLoader<Event, List<JidCode>>
+    ) = jidCodesForEventsLoader.loadStats(event)
 
     @SchemaMapping
     fun jidCodeStats(

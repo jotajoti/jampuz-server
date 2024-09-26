@@ -11,6 +11,12 @@ type Event {
     next: Event
 }
 
+input CreateEventInput {
+    locationId: ID!
+    code: String!
+    year: Int!
+}
+
 extend type Location {
     events: [Event!]!
     latestEvent: Event
@@ -19,6 +25,10 @@ extend type Location {
 extend type Query {
     # If no year is provided the latest event is taken
     event(code: String!, year: Int): Event
+}
+
+extend type Mutation {
+    createEvent(input: CreateEventInput!): Event
 }
 
 extend type Subscription {

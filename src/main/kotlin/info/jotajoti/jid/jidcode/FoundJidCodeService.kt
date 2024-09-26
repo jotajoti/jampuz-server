@@ -1,6 +1,6 @@
 package info.jotajoti.jid.jidcode
 
-import info.jotajoti.jid.location.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.participant.*
 import info.jotajoti.jid.security.*
 import info.jotajoti.jid.subscription.*
@@ -16,7 +16,7 @@ class FoundJidCodeService(
 ) {
 
     fun createFoundJidCode(input: RegisterFoundJidCodeInput, authentication: Authentication): FoundJidCode {
-        val participant = authentication.getParticipant(input.locationId)
+        val participant = authentication.getParticipant(input.eventId)
 
         val foundJidCode = FoundJidCode(
             participant = participant,
@@ -27,15 +27,15 @@ class FoundJidCodeService(
 
         val savedJidCode = foundJidCodeRepository.save(foundJidCode)
 
-        subscriptionService.publishMessage(JidCodeStatsSubscription(input.locationId))
-        subscriptionService.publishMessage(ParticipantsSubscription(input.locationId))
+        subscriptionService.publishMessage(JidCodeStatsSubscription(input.eventId))
+        subscriptionService.publishMessage(ParticipantsSubscription(input.eventId))
 
         return savedJidCode
     }
 
-    private fun Authentication.getParticipant(locationId: LocationId) = when (this) {
+    private fun Authentication.getParticipant(eventId: EventId) = when (this) {
         is ParticipantAuthentication -> participant
-        is AdminAuthentication -> participantService.getParticipantForAdmin(locationId, admin)
+        is AdminAuthentication -> participantService.getParticipantForAdmin(eventId, admin)
         else -> TODO()
     }
 

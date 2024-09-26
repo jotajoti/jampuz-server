@@ -1,8 +1,8 @@
 package info.jotajoti.jid
 
 import graphql.scalars.*
+import info.jotajoti.jid.event.*
 import info.jotajoti.jid.jidcode.*
-import info.jotajoti.jid.location.*
 import info.jotajoti.jid.security.*
 import org.springframework.aot.hint.annotation.*
 import org.springframework.boot.*

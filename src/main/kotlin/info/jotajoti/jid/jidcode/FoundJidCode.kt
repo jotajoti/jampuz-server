@@ -2,17 +2,15 @@ package info.jotajoti.jid.jidcode
 
 import info.jotajoti.jid.participant.*
 import jakarta.persistence.*
+import jakarta.persistence.GenerationType.*
 import org.hibernate.annotations.*
 import org.hibernate.type.*
-import java.util.*
-
-typealias FoundJidCodeId = UUID
 
 @Entity
 data class FoundJidCode(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = UUID)
     @JdbcTypeCode(SqlTypes.VARCHAR)
     val id: FoundJidCodeId? = null,
 
