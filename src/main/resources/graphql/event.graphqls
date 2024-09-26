@@ -1,0 +1,26 @@
+type Event {
+    id: ID!
+    code: JidCode!
+    year: Int!
+    location: Location!
+    # Returns true if event is latest for the location
+    isLatest: Boolean!
+    # Return previous year's event
+    previous: Event
+    # Return next year's event
+    next: Event
+}
+
+extend type Location {
+    events: [Event!]!
+    latestEvent: Event
+}
+
+extend type Query {
+    # If no year is provided the latest event is taken
+    event(code: String!, year: Int): Event
+}
+
+extend type Subscription {
+    eventUpdated(eventId: ID!): Event
+}

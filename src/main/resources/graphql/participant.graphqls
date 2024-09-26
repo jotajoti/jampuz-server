@@ -5,7 +5,7 @@ type Participant {
     pinCode: String
     # If not null, means this participant is linked to the Admin user so the admin also can act as participant.
     admin: Admin
-    location: Location!
+    event: Event!
     foundJidCodes: [FoundJidCode!]
 }
 
@@ -17,12 +17,12 @@ type FoundJidCode {
 
 input CreateParticipantInput {
     name: String!
-    locationId: ID!
+    eventId: ID!
 }
 
 input RegisterFoundJidCode {
     code: String!
-    locationId: ID!
+    eventId: ID!
 }
 
 extend type Location {
@@ -30,19 +30,20 @@ extend type Location {
 }
 
 extend type Mutation {
-    authenticateParticipant(locationId: ID!, name: String!, pinCode: String!): String
+    authenticateParticipant(eventId: ID!, name: String!, pinCode: String!): String
     createParticipant(input: CreateParticipantInput!): Participant
+    # Participant is taken from authentication
     registerFoundJidCode(input: RegisterFoundJidCode!): FoundJidCode
 }
 
 extend type Query {
     # Return null if not authenticated or if authentication is not a participant
-    # If locationCode is provided it will only return participant if the authenticated
-    # participant is associated with the location
-    authenticatedParticipant(locationCode: String, year: Int): Participant
+    # If eventJidCode is provided it will only return participant if the authenticated
+    # participant is associated with the event
+    authenticatedParticipant(eventJidCode: String, year: Int): Participant
 }
 
 extend type Subscription {
-    participants(locationId: ID!): [Participant!]
+    participants(eventId: ID!): [Participant!]
 }
 
