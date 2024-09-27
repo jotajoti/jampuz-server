@@ -1,0 +1,37 @@
+{
+  "name": "JID Server Spring",
+  "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "none",
+      "installMaven": "true",
+      "installGradle": "false"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "forwardPorts": [
+    8080
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "Spring Web - GraphQL endpoints and Actuator",
+      "protocol": "http"
+    }
+  },
+  "customizations": {
+    "jetbrains": {
+      "backend": "IntelliJ"
+    },
+    "vscode": {
+      "extensions": [
+        "fwcd.kotlin",
+        "vscjava.vscode-spring-initializr",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vmware.vscode-spring-boot",
+        "vmware.vscode-boot-dev-pack",
+        "graphql.vscode-graphql",
+        "graphql.vscode-graphql-syntax"
+      ]
+    }
+  }
+}
