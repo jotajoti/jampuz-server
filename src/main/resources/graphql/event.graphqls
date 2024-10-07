@@ -32,5 +32,5 @@ extend type Mutation {
 }
 
 extend type Subscription {
-    eventUpdated(eventId: ID!): Event
+    eventUpdated(eventId: ID!): ID!
 }

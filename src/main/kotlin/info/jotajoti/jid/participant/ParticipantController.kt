@@ -49,15 +49,7 @@ class ParticipantController(
             }
             .also {
                 subscriptionService
-                    .publishMessage(ParticipantsSubscription(it.event.id!!))
-            }
-
-    @SubscriptionMapping
-    fun participants(@Argument eventId: EventId) =
-        subscriptionService
-            .subscribe(ParticipantsSubscription::class)
-            .map {
-                participantService.findParticipantsForEvent(it.eventId)
+                    .publishMessage(EventSubscription(it.event.id!!))
             }
 
 }

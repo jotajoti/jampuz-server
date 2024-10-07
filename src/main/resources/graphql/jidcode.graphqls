@@ -40,7 +40,3 @@ extend type Participant {
 extend type Event {
     jidCodeStats: JidCodeStats!
 }
-
-extend type Subscription {
-    jidCodeStats(eventId: ID!): JidCodeStats
-}

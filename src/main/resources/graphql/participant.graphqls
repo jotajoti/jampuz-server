@@ -42,8 +42,3 @@ extend type Query {
     # participant is associated with the event
     authenticatedParticipant(eventJidCode: String, year: Int): Participant
 }
-
-extend type Subscription {
-    participants(eventId: ID!): [Participant!]
-}
-

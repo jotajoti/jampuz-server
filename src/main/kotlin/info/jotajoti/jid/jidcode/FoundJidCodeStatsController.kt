@@ -2,7 +2,6 @@ package info.jotajoti.jid.jidcode
 
 import info.jotajoti.jid.event.*
 import info.jotajoti.jid.participant.*
-import info.jotajoti.jid.subscription.*
 import org.dataloader.*
 import org.springframework.graphql.data.method.annotation.*
 import org.springframework.graphql.execution.*
@@ -13,7 +12,6 @@ import java.util.concurrent.*
 @Controller
 class FoundJidCodeStatsController(
     private val foundJidCodeRepository: FoundJidCodeRepository,
-    private val subscriptionService: SubscriptionService,
     batchLoaderRegistry: BatchLoaderRegistry,
 ) {
 
@@ -60,17 +58,6 @@ class FoundJidCodeStatsController(
                 Mono.just(jidCodesForEvents)
             }
     }
-
-    @SubscriptionMapping
-    fun jidCodeStats(@Argument eventId: EventId) =
-        subscriptionService
-            .subscribe(JidCodeStatsSubscription::class)
-            .map {
-                foundJidCodeRepository
-                    .findFoundJidCodesByParticipantEventId(it.eventId)
-                    .map { it.code }
-                    .toStats()
-            }
 
     @SchemaMapping
     fun jidCodeStats(
