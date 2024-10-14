@@ -8,17 +8,16 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>info.jotajoti</groupId>
-	<artifactId>jid</artifactId>
+	<artifactId>jampuz-server</artifactId>
 	<version>0.1.4-SNAPSHOT</version>
-	<name>jid</name>
-	<description>Joti Location Service</description>
+	<name>Jampuz Server</name>
 	<properties>
 		<java.version>21</java.version>
 		<kotlin.version>1.9.22</kotlin.version>
 	</properties>
 	<scm>
-		<connection>scm:git:https://github.com/jotajoti/jid-server-spring</connection>
-		<developerConnection>scm:git:https://github.com/jotajoti/jid-server-spring</developerConnection>
+		<connection>scm:git:https://github.com/jotajoti/jampuz-server</connection>
+		<developerConnection>scm:git:https://github.com/jotajoti/jampuz-server</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
@@ -163,11 +162,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>info.jotajoti.jid.JidApplicationKt</mainClass>
+					<mainClass>info.jotajoti.jampuz.JampuzApplicationKt</mainClass>
 					<image>
 						<builder>dashaun/builder:tiny</builder>
 						<env>
-							<BP_OCI_SOURCE>https://github.com/jotajoti/jid-server-spring</BP_OCI_SOURCE>
+							<BP_OCI_SOURCE>https://github.com/jotajoti/jampuz-server</BP_OCI_SOURCE>
 						</env>
 					</image>
 				</configuration>
@@ -203,11 +202,13 @@
 				<version>3.0.1</version>
 				<configuration>
 					<preparationGoals>
-						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.rel.info.jotajoti:jid" scm:checkin verify
-					</preparationGoals>
+                        -Prelease exec:java -Dexec.mainClass="info.jotajoti.jampuz.build.CopyVersion"
+                        -Dexec.args="project.rel.info.jotajoti:jampuz-server" scm:checkin verify
+                    </preparationGoals>
 					<completionGoals>
-						-Prelease exec:java -Dexec.mainClass="info.jotajoti.jid.build.CopyVersion" -Dexec.args="project.dev.info.jotajoti:jid" scm:checkin verify
-					</completionGoals>
+                        -Prelease exec:java -Dexec.mainClass="info.jotajoti.jampuz.build.CopyVersion"
+                        -Dexec.args="project.dev.info.jotajoti:jampuz-server" scm:checkin verify
+                    </completionGoals>
 					<scmDevelopmentCommitComment>prepare for next development iteration</scmDevelopmentCommitComment>
 					<scmReleaseCommitComment>prepare release @{releaseLabel}</scmReleaseCommitComment>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
