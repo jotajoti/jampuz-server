@@ -1,0 +1,154 @@
+### Create sample data
+< {%
+    request.variables.set("locale", "da")
+%}
+GET http://localhost:8080/sampledata?locale={{locale}}
+
+> {%
+    client.global.set("admin_token", response.body.firstAdmin.token);
+%}
+
+
+### Get locations via GraphQL
+GRAPHQL http://localhost:8080/graphql
+Authorization: Bearer {{admin_token}}
+
+query GetEvents {
+    locations {
+        name
+        latestEvent {
+            code {
+                value
+            }
+        }
+    }
+}
+
+> {%
+    client.test("Response contains locations", () => {
+        client.assert(response.status === 200);
+        client.assert(response.body.data.locations.length > 0);
+    });
+
+    client.global.set("event_code", response.body.data.locations[0].latestEvent.code.value);
+%}
+
+
+### Get event by code without authentication
+GRAPHQL http://localhost:8080/graphql
+
+query GetEventByCode($code: String!) {
+    event(code: $code) {
+        id
+        year
+        participants {
+            name
+            pinCode
+        }
+    }
+}
+
+{
+  "code": "{{event_code}}"
+}
+
+> {%
+    client.test("Response contains event with participants without pin codes", () => {
+        client.assert(response.status === 200);
+        client.assert(response.body.data.event.participants.length > 0);
+        client.assert(response.body.data.event.participants.every((participant) => !participant.pinCode));
+    });
+%}
+
+
+### Get event by code with admin authentication
+GRAPHQL http://localhost:8080/graphql
+Authorization: Bearer {{admin_token}}
+
+query GetEventByCode($code: String!) {
+    event(code: $code) {
+        id
+        year
+        participants {
+            name
+            pinCode
+        }
+    }
+}
+
+{
+  "code": "{{event_code}}"
+}
+
+> {%
+    client.test("Response contains event with participants with pin codes", () => {
+        client.assert(response.status === 200);
+        client.assert(response.body.data.event.participants.length > 0);
+        client.assert(response.body.data.event.participants.every((participant) => participant.pinCode));
+    });
+
+    client.global.set("event_id", response.body.data.event.id);
+    client.global.set("participant_name", response.body.data.event.participants[0].name);
+    client.global.set("participant_pin_code", response.body.data.event.participants[0].pinCode);
+%}
+
+
+### Authenticate participant
+GRAPHQL http://localhost:8080/graphql
+
+mutation LoginParticipant($name: String!, $pinCode: String!, $eventId: ID!) {
+    authenticateParticipant(name: $name, pinCode: $pinCode, eventId: $eventId)
+}
+
+{
+  "name": "{{participant_name}}",
+  "pinCode": "{{participant_pin_code}}",
+  "eventId": "{{event_id}}"
+}
+
+> {%
+    client.test("Participant authenticated", () => {
+        client.assert(response.status === 200);
+        client.assert(response.body.data.authenticateParticipant.length > 0);
+    });
+
+    client.global.set("participant_token", response.body.data.authenticateParticipant);
+%}
+
+
+### Get event by code with participant authentication
+GRAPHQL http://localhost:8080/graphql
+Authorization: Bearer {{participant_token}}
+
+query GetEventByCode($code: String!) {
+    event(code: $code) {
+        id
+        year
+        participants {
+            name
+            pinCode
+        }
+    }
+}
+
+{
+  "code": "{{event_code}}"
+}
+
+> {%
+    client.test("Only authenticated participant has pin code in response", () => {
+        client.assert(response.status === 200);
+        client.assert(response.body.data.event.participants.length > 0);
+        const participantsPinCodeResult = response
+            .body
+            .data
+            .event
+            .participants
+            .filter(participant => participant.name !== client.global.get("participant_name"))
+            .every(participant => !participant.pinCode)
+        client.assert(participantsPinCodeResult);
+    });
+%}
+
+
+###
