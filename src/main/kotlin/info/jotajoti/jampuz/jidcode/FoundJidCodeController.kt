@@ -13,7 +13,7 @@ class FoundJidCodeController(
     private val foundJidCodeService: FoundJidCodeService,
 ) {
 
-    @RequireParticipant
+    @IsParticipatingInEvent
     @MutationMapping
     fun registerFoundJidCode(
         @Valid @Argument input: RegisterFoundJidCodeInput,

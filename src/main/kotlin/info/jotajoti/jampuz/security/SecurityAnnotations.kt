@@ -14,6 +14,12 @@ annotation class RequireAdmin
 annotation class RequireParticipant
 
 @Language("SpEL")
+@PreAuthorize("#input.eventId != null and @eventSecurityService.isParticipatingInEvent(#input.eventId, authentication)")
+@RequireParticipant
+@Target(CLASS, FUNCTION)
+annotation class IsParticipatingInEvent
+
+@Language("SpEL")
 @PreAuthorize("#locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#locationId, authentication)")
 @RequireAdmin
 @Target(CLASS, FUNCTION)
