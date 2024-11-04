@@ -13,13 +13,13 @@ fun JidCode.Companion.random() =
 // Select a region based on an average of number of countries in total among all the regions
 private fun randomRegionByCountry(): Region {
     val countryCodes = Region
-        .values()
+        .entries
         .flatMap { region -> region.countryCodes }
 
     val selectedCountryCode = countryCodes.random()
 
     return Region
-        .values()
+        .entries
         .first { region ->
             region.countryCodes.contains(selectedCountryCode)
         }
