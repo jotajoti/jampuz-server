@@ -23,10 +23,10 @@ class ParticipantController(
         participant: Participant,
         authentication: Authentication,
         @ContextValue(required = false) participantCreationContext: ParticipantCreationContext?
-    ) = when (authentication) {
+    ): String? = when (authentication) {
         is AdminAuthentication -> eventService
             .getByIdAndOwner(participant.event.id!!, authentication.admin)
-            .let { participant.pinCode }
+            .let { participant.pinCode.value }
 
         is ParticipantAuthentication -> participant
             .pinCode
@@ -34,10 +34,12 @@ class ParticipantController(
                 participant.id == authentication.participant.id
                         || participantCreationContext?.createdParticipantId == participant.id
             }
+            ?.value
 
         else -> participant
             .pinCode
             .takeIf { participantCreationContext?.createdParticipantId == participant.id }
+            ?.value
     }
 
     @MutationMapping
