@@ -2,9 +2,8 @@ package info.jotajoti.jampuz.exceptions
 
 import graphql.*
 import graphql.execution.ResultPath.*
-import info.jotajoti.jampuz.jidcode.*
-import info.jotajoti.jampuz.location.*
 import jakarta.validation.*
+import org.springframework.core.annotation.AnnotationUtils.*
 import org.springframework.graphql.data.method.annotation.*
 import org.springframework.graphql.execution.ErrorType.*
 import org.springframework.web.bind.annotation.*
@@ -12,32 +11,13 @@ import org.springframework.web.bind.annotation.*
 @ControllerAdvice
 class ExceptionHandlers {
 
-    @GraphQlExceptionHandler(CodeAlreadyRegisteredForParticipantException::class)
-    fun handleBadRequest(exception: Exception): GraphQLError =
+    @GraphQlExceptionHandler(ErrorCodeException::class)
+    fun handleErrorCodeException(exception: ErrorCodeException): GraphQLError =
         GraphQLError
             .newError()
-            .errorType(BAD_REQUEST)
+            .errorType(exception.errorType)
             .message(exception.message)
-            .build()
-
-    @GraphQlExceptionHandler(LocationNotFoundException::class)
-    fun handleNotFound(exception: Exception): GraphQLError =
-        GraphQLError
-            .newError()
-            .errorType(NOT_FOUND)
-            .message(exception.message)
-            .build()
-
-    @GraphQlExceptionHandler(
-        CannotAddSelfToLocation::class,
-        CannotRemoveSelfFromLocation::class,
-        AdminNotInLocationException::class
-    )
-    fun handleForbidden(exception: Exception): GraphQLError =
-        GraphQLError
-            .newError()
-            .errorType(FORBIDDEN)
-            .message(exception.message)
+            .addErrorCodes(exception.errorCode)
             .build()
 
     @GraphQlExceptionHandler(ConstraintViolationException::class)
@@ -47,7 +27,41 @@ class ExceptionHandlers {
             .errorType(BAD_REQUEST)
             .path(parse(constraintViolationException.message?.toPath()))
             .message(constraintViolationException.message?.substringAfter(": ")?.substringBefore(", "))
+            .addErrorCode(constraintViolationException)
             .build()
+
+    private fun GraphQLError.Builder<*>.addErrorCode(constraintViolationException: ConstraintViolationException): GraphQLError.Builder<*> {
+        val errorCodes = constraintViolationException
+            .constraintViolations
+            .filter {
+                findAnnotation(
+                    it.constraintDescriptor.annotation.annotationClass.java,
+                    ExposeErrorCode::class.java
+                ) != null
+            }
+            .map {
+                findAnnotation(
+                    it.constraintDescriptor.annotation.annotationClass.java,
+                    ExposeErrorCode::class.java
+                )!!.value
+            }
+
+        addErrorCodes(*errorCodes.toTypedArray())
+
+        return this
+    }
+
+    private fun GraphQLError.Builder<*>.addErrorCodes(vararg errorCodes: ErrorCode) =
+        apply {
+            if (errorCodes.isNotEmpty()) {
+                extensions(
+                    mapOf(
+                        "firstErrorCode" to errorCodes[0].code,
+                        "errorCodes" to errorCodes.map { it.code },
+                    )
+                )
+            }
+        }
 
     private fun String.toPath() =
         "/${substringBefore(":").replace(".", "/")}"

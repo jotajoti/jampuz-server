@@ -1,10 +1,13 @@
 package info.jotajoti.jampuz.jidcode
 
 import info.jotajoti.jampuz.event.*
+import info.jotajoti.jampuz.exceptions.*
+import info.jotajoti.jampuz.exceptions.ErrorCode.*
 import info.jotajoti.jampuz.participant.*
 import info.jotajoti.jampuz.security.*
 import info.jotajoti.jampuz.subscription.*
 import org.springframework.data.domain.*
+import org.springframework.graphql.execution.ErrorType.*
 import org.springframework.security.core.*
 import org.springframework.stereotype.*
 
@@ -45,4 +48,6 @@ class FoundJidCodeService(
     }
 }
 
-class CodeAlreadyRegisteredForParticipantException : Exception("Code already registered for participant")
+class CodeAlreadyRegisteredForParticipantException : ErrorCodeException(
+    "Code already registered for participant", CODE_ALREADY_REGISTERED_FOR_PARTICIPANT, BAD_REQUEST
+)

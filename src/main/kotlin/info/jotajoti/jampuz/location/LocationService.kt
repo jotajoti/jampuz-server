@@ -1,8 +1,11 @@
 package info.jotajoti.jampuz.location
 
 import info.jotajoti.jampuz.admin.*
+import info.jotajoti.jampuz.exceptions.*
+import info.jotajoti.jampuz.exceptions.ErrorCode.*
 import info.jotajoti.jampuz.security.*
 import org.springframework.data.repository.*
+import org.springframework.graphql.execution.ErrorType.*
 import org.springframework.stereotype.*
 
 @Service
@@ -20,7 +23,7 @@ class LocationService(
 
     fun addOwner(locationId: LocationId, adminId: AdminId, authentication: AdminAuthentication): Location? {
         if (adminId == authentication.admin.id) {
-            throw CannotAddSelfToLocation()
+            throw CannotAddSelfToLocationException()
         }
 
         return locationRepository
@@ -42,7 +45,7 @@ class LocationService(
 
     fun removeOwner(locationId: LocationId, adminId: AdminId, authentication: AdminAuthentication): Location? {
         if (adminId == authentication.admin.id) {
-            throw CannotRemoveSelfFromLocation()
+            throw CannotRemoveSelfFromLocationException()
         }
 
         return locationRepository
@@ -56,7 +59,14 @@ class LocationService(
     }
 }
 
-class AdminNotInLocationException : Exception("Admin not part of location")
-class CannotAddSelfToLocation : Exception("Cannot add yourself to a location")
-class CannotRemoveSelfFromLocation : Exception("Cannot remove yourself from a location")
-class LocationNotFoundException(locationId: LocationId) : Exception("No location found with id $locationId")
+class AdminNotInLocationException :
+    ErrorCodeException("Admin not part of location", ADMIN_NOT_IN_LOCATION, FORBIDDEN)
+
+class CannotAddSelfToLocationException :
+    ErrorCodeException("Cannot add yourself to a location", CANNOT_ADD_SELF_TO_LOCATION, FORBIDDEN)
+
+class CannotRemoveSelfFromLocationException :
+    ErrorCodeException("Cannot remove yourself from a location", CANNOT_REMOVE_SELF_FROM_LOCATION, FORBIDDEN)
+
+class LocationNotFoundException(locationId: LocationId) :
+    ErrorCodeException("No location found with id $locationId", LOCATION_NOT_FOUND, NOT_FOUND)
