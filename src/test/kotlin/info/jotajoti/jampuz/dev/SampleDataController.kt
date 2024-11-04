@@ -8,6 +8,7 @@ import info.jotajoti.jampuz.jidcode.*
 import info.jotajoti.jampuz.location.*
 import info.jotajoti.jampuz.participant.*
 import info.jotajoti.jampuz.security.*
+import info.jotajoti.jampuz.security.SubjectType.*
 import info.jotajoti.jampuz.util.*
 import org.springframework.http.*
 import org.springframework.http.ResponseEntity.*
@@ -26,6 +27,7 @@ class SampleDataController(
     private val eventRepository: EventRepository,
     private val participantRepository: ParticipantRepository,
     private val foundJidCodeRepository: FoundJidCodeRepository,
+    private val jwtService: JwtService,
     private val jdbcTemplate: JdbcTemplate,
     private val securityService: SecurityService,
 ) {
@@ -61,7 +63,11 @@ class SampleDataController(
                 "eventCodes" to events.map {
                     it.code.code
                 }.toSet(),
-                "firstAdmin" to admins.first(),
+                "firstAdmin" to mapOf(
+                    "email" to admins.first().email,
+                    "password" to "john.doe123",
+                    "token" to jwtService.createToken(Subject(ADMIN, admins.first().id!!))
+                ),
             )
         )
     }

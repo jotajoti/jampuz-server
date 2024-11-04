@@ -30,10 +30,10 @@ password:
   salt: $2a$09$/hJXJVlOfryvAa2s2ifKw.yei76MTsHlWCF0wqHkbUZ34rOZ0jtwy
 
 samples:
-  jid-codes: 400
-  locations: 5
-  years-per-location: 4
-  max-found-jid-codes-per-participant: 25
+  jid-codes: 5000
+  locations: 2
+  years-per-location: 10
+  max-found-jid-codes-per-participant: 250
   min-participants-per-location: 20
   max-participants-per-location: 90
   users: 10
