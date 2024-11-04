@@ -24,6 +24,12 @@ class LocationController(
     fun events(location: Location) =
         location.events.sortedBy { it.year }
 
+    @SchemaMapping
+    fun latestEvent(location: Location) =
+        location
+            .events
+            .maxByOrNull { it.year }
+
     @RequireAdmin
     @MutationMapping
     fun createLocation(
