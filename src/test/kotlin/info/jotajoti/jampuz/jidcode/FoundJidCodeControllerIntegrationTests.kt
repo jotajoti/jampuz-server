@@ -106,7 +106,7 @@ class FoundJidCodeControllerIntegrationTests : GraphQLIntegrationTests() {
             )
                 .errors()
                 .expect {
-                    it.message == "Admin not part of location"
+                    it.message == "Forbidden"
                 }
         }
     }
