@@ -1,10 +1,13 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### IntelliJ IDEA ###
+.devcontainer/
+.github/
 .idea
-*.iws
-*.iml
-*.ipr
+.mvn/
+src/
+target/
+*.md
+LICENSE
+mvn*
+*.xml
+*.http
+
+!target/jampuz-server-*.jar
