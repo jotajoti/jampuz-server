@@ -38,6 +38,23 @@ class EventControllerIntegrationTests : GraphQLIntegrationTests() {
     inner class CreateEventTests {
 
         @Test
+        fun `should create event`() {
+
+            val locationId = testEvent.location.id!!
+            val jidCode = testEvent.code.code
+            val year = testEvent.year + 1
+
+            executeAdminQueryName(
+                graphQlDocument = "createEvent",
+                adminId = testAdmins[0].id!!,
+                "locationId" to locationId,
+                "code" to jidCode,
+                "year" to year
+            )
+                .path("createEvent.id").hasValue()
+        }
+
+        @Test
         fun `should not be allowed to create event with same code and year`() {
 
             val locationId = testEvent.location.id!!
