@@ -23,7 +23,7 @@ annotation class IsParticipatingInEvent
 @PreAuthorize("""
     (#locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#locationId, authentication))
     or
-    (#input.locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#input.locationId, authentication))
+    (#input != null and #input.locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#input.locationId, authentication))
 """)
 @RequireAdmin
 @Target(CLASS, FUNCTION)
