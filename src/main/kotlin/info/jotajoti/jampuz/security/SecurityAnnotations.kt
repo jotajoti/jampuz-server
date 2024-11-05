@@ -20,7 +20,11 @@ annotation class RequireParticipant
 annotation class IsParticipatingInEvent
 
 @Language("SpEL")
-@PreAuthorize("#locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#locationId, authentication)")
+@PreAuthorize("""
+    (#locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#locationId, authentication))
+    or
+    (#input.locationId != null and @locationSecurityService.isAuthenticationOwnerOfLocation(#input.locationId, authentication))
+""")
 @RequireAdmin
 @Target(CLASS, FUNCTION)
 annotation class IsOwnerOfLocation
