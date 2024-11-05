@@ -2,6 +2,7 @@ package info.jotajoti.jampuz.event
 
 import info.jotajoti.jampuz.jidcode.*
 import info.jotajoti.jampuz.security.*
+import info.jotajoti.jampuz.subscription.*
 import jakarta.validation.*
 import org.springframework.graphql.data.method.annotation.*
 import org.springframework.stereotype.*
@@ -11,6 +12,7 @@ import org.springframework.validation.annotation.*
 @Validated
 class EventController(
     private val eventService: EventService,
+    private val subscriptionService: SubscriptionService,
 ) {
 
     @SchemaMapping
@@ -38,4 +40,12 @@ class EventController(
         @Valid @Argument input: CreateEventInput,
         adminAuthentication: AdminAuthentication,
     ) = eventService.createEvent(input)
+
+    @SubscriptionMapping
+    fun eventUpdated(@Argument eventId: EventId) =
+        subscriptionService
+            .subscribe(EventSubscription::class)
+            .map {
+                it.eventId
+            }
 }
