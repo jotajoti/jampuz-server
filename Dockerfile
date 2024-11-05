@@ -13,8 +13,8 @@ FROM eclipse-temurin:21-jre-alpine
 
 RUN apk --no-cache add curl
 
-COPY --from=builder /workspace/app/target/*.jar /app/jid-server.jar
+COPY --from=builder /workspace/app/target/*.jar /app/jampuz-server.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app/jid-server.jar"]
+ENTRYPOINT ["java","-jar","/app/jampuz-server.jar"]

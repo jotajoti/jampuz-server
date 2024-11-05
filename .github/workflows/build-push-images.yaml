@@ -71,8 +71,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  deploy-to-oracle-cloud:
-    uses: jotajoti/jid-deploy/.github/workflows/deploy-to-oracle-cloud.yml@main
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Oracle Cloud
     needs: push-image
-    if: startsWith(github.event.ref, 'refs/tags/v')
-    secrets: inherit
+    steps:
+      - name: Trigger deploy to Coolify on Oracle Cloud
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
