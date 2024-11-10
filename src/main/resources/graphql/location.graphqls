@@ -9,8 +9,10 @@ input CreateLocationInput {
 }
 
 extend type Query {
-    # Only available to authenticated admins
+    # Only returns locations owned by authenticated admin
     locations: [Location!]
+    # Only returns location if owned by authenticated admin
+    location(locationId: ID!): Location
 }
 
 extend type Mutation {

@@ -33,7 +33,7 @@ data class JidCode(
 
     @get:Transient
     val region: Region
-        get() = Region.values().find { it.code == code[0].digitToInt() }!!
+        get() = Region.entries.find { it.code == code[0].digitToInt() }!!
 
     @get:Transient
     val country: String
@@ -49,8 +49,8 @@ annotation class ValidJidCode(
     val payload: Array<KClass<out Payload>> = []
 )
 
-class ValidJidCodeValidator : ConstraintValidator<ValidJidCode, String> {
+class ValidJidCodeValidator : ConstraintValidator<ValidJidCode, String?> {
 
-    override fun isValid(code: String, context: ConstraintValidatorContext?) =
-        JidCode.isValid(code)
+    override fun isValid(code: String?, context: ConstraintValidatorContext?) =
+        code?.let { JidCode.isValid(code) } ?: true
 }

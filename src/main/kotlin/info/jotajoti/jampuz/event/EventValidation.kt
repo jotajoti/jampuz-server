@@ -1,5 +1,7 @@
 package info.jotajoti.jampuz.event
 
+import info.jotajoti.jampuz.exceptions.*
+import info.jotajoti.jampuz.exceptions.ErrorCode.*
 import jakarta.validation.*
 import kotlin.annotation.AnnotationRetention.*
 import kotlin.annotation.AnnotationTarget.*
@@ -8,6 +10,7 @@ import kotlin.reflect.*
 @Target(CLASS)
 @Retention(RUNTIME)
 @Constraint(validatedBy = [UniqueCodeAndYearValidator::class])
+@ExposeErrorCode(EVENT_CODE_AND_YEAR_NOT_AVAILABLE)
 annotation class UniqueCodeAndYear(
     val message: String = "An event with the same code and year is already created",
     val groups: Array<KClass<*>> = [],

@@ -1,0 +1,10 @@
+mutation UpdateEvent($eventId: ID!, $code: String, $year: Int, $active: Boolean) {
+    updateEvent(input: {id: $eventId, code: $code, year: $year, active: $active}) {
+        id
+        code {
+            value
+        }
+        year
+        active
+    }
+}

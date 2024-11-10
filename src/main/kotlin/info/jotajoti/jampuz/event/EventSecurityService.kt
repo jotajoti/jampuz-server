@@ -17,4 +17,11 @@ class EventSecurityService(
 
         else -> false
     }
+
+    fun isAuthenticationOwnerOfEvent(eventId: EventId, authentication: Authentication) = when (authentication) {
+        is AdminAuthentication -> locationService.findAllByOwner(authentication.admin)
+            .any { location -> location.events.any { event -> event.id == eventId } }
+
+        else -> false
+    }
 }

@@ -8,6 +8,7 @@ CREATE TABLE `event`
     `location_id`        VARCHAR(36)       NOT NULL,
     `code`               VARCHAR(6)        NOT NULL,
     `year`               SMALLINT UNSIGNED NOT NULL,
+    `active`             TINYINT(1)        NOT NULL DEFAULT 0,
     `created_date`       TIMESTAMP         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `last_modified_date` TIMESTAMP         NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),

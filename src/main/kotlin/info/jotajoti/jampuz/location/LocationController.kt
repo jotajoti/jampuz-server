@@ -20,6 +20,11 @@ class LocationController(
         else -> emptyList()
     }
 
+    @QueryMapping
+    @IsOwnerOfLocation
+    fun location(@Argument locationId: LocationId) =
+        locationService.getById(locationId)
+
     @SchemaMapping
     fun events(location: Location) =
         location.events.sortedBy { it.year }

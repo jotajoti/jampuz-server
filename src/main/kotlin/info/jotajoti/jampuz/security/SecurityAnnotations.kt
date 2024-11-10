@@ -28,3 +28,13 @@ annotation class IsParticipatingInEvent
 @RequireAdmin
 @Target(CLASS, FUNCTION)
 annotation class IsOwnerOfLocation
+
+@Language("SpEL")
+@PreAuthorize("""
+    (#eventId != null and @eventSecurityService.isAuthenticationOwnerOfEvent(#eventId, authentication))
+    or
+    (#input != null and #input.id != null and @eventSecurityService.isAuthenticationOwnerOfEvent(#input.id, authentication))
+""")
+@RequireAdmin
+@Target(CLASS, FUNCTION)
+annotation class IsOwnerOfEvent

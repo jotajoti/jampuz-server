@@ -1,6 +1,5 @@
 package info.jotajoti.jampuz.test
 
-import info.jotajoti.jampuz.*
 import info.jotajoti.jampuz.admin.*
 import info.jotajoti.jampuz.dev.*
 import info.jotajoti.jampuz.event.*
@@ -26,6 +25,7 @@ import java.time.*
 @EnableConfigurationProperties(
     SampleProperties::class,
 )
+@Sql("/db/reset.sql")
 abstract class GraphQLIntegrationTests {
 
     companion object {
@@ -65,7 +65,6 @@ abstract class GraphQLIntegrationTests {
     val testParticipants = mutableListOf<Participant>()
 
     @BeforeEach
-    @Sql("/db/reset.sql")
     fun createTestData() {
         testAdmins.clear()
 
@@ -89,8 +88,9 @@ abstract class GraphQLIntegrationTests {
         testEvent = eventRepository.save(
             Event(
                 location = testLocation,
-                code = JidCode.random(),
+                code = JidCode("5DK10A"),
                 year = LocalDate.now().year,
+                active = true,
             )
         )
 

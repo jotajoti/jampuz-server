@@ -25,6 +25,8 @@ data class Event(
 
     var year: Int,
 
+    var active: Boolean,
+
     @OneToMany(mappedBy = "event")
     var participants: List<Participant> = emptyList(),
 )

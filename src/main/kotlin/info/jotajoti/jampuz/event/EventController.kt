@@ -34,12 +34,24 @@ class EventController(
     fun event(@Argument code: JidCode, @Argument year: Int?) =
         eventService.findByCode(code, year)
 
+    @QueryMapping
+    @IsOwnerOfEvent
+    fun eventById(@Argument eventId: EventId) =
+        eventService.getById(eventId)
+
     @IsOwnerOfLocation
     @MutationMapping
     fun createEvent(
         @Valid @Argument input: CreateEventInput,
         adminAuthentication: AdminAuthentication,
     ) = eventService.createEvent(input)
+
+    @IsOwnerOfEvent
+    @MutationMapping
+    fun updateEvent(
+        @Valid @Argument input: UpdateEventInput,
+        adminAuthentication: AdminAuthentication,
+    ) = eventService.updateEvent(input)
 
     @SubscriptionMapping
     fun eventUpdated(@Argument eventId: EventId) =
