@@ -1,10 +1,13 @@
 package info.jotajoti.jampuz.security
 
 import info.jotajoti.jampuz.event.*
+import info.jotajoti.jampuz.exceptions.*
+import info.jotajoti.jampuz.exceptions.ErrorCode.*
 import info.jotajoti.jampuz.jidcode.*
 import info.jotajoti.jampuz.participant.*
 import info.jotajoti.jampuz.security.SubjectType.*
 import org.springframework.graphql.data.method.annotation.*
+import org.springframework.graphql.execution.ErrorType.*
 import org.springframework.security.core.*
 import org.springframework.stereotype.*
 
@@ -23,6 +26,7 @@ class SecurityController(
             ?.let {
                 jwtService.createToken(Subject(PARTICIPANT, it.id!!))
             }
+            ?: throw ParticipantAuthenticationFailedException()
 
 
     @MutationMapping
@@ -32,6 +36,7 @@ class SecurityController(
             ?.let {
                 jwtService.createToken(Subject(ADMIN, it.id!!))
             }
+            ?: throw AdminAuthenticationFailedException()
 
     @QueryMapping
     fun authenticatedAdmin(authentication: Authentication) = when (authentication) {
@@ -60,3 +65,9 @@ class SecurityController(
         else -> null
     }
 }
+
+class AdminAuthenticationFailedException :
+    ErrorCodeException("Authentication failed", ADMIN_AUTHENTICATION_FAILED, UNAUTHORIZED)
+
+class ParticipantAuthenticationFailedException :
+    ErrorCodeException("Authentication failed", PARTICIPANT_AUTHENTICATION_FAILED, UNAUTHORIZED)

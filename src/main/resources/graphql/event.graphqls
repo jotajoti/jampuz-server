@@ -2,6 +2,7 @@ type Event {
     id: ID!
     code: JidCode!
     year: Int!
+    active: Boolean!
     location: Location!
     # Returns true if event is latest for the location
     isLatest: Boolean!
@@ -15,6 +16,14 @@ input CreateEventInput {
     locationId: ID!
     code: String!
     year: Int!
+    active: Boolean = false
+}
+
+input UpdateEventInput {
+    id: ID!
+    code: String
+    year: Int
+    active: Boolean
 }
 
 extend type Location {
@@ -24,11 +33,17 @@ extend type Location {
 
 extend type Query {
     # If no year is provided the latest event is taken
+    # Can be loaded without authentication
     event(code: String!, year: Int): Event
+
+    # Load specific event by ID.
+    # Requires admin authentication
+    eventById(eventId: ID!): Event
 }
 
 extend type Mutation {
     createEvent(input: CreateEventInput!): Event
+    updateEvent(input: UpdateEventInput!): Event
 }
 
 extend type Subscription {

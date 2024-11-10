@@ -14,4 +14,6 @@ data class CreateEventInput(
 
     @get:Min(2000) @get:Max(2100)
     val year: Int,
+
+    val active: Boolean,
 )

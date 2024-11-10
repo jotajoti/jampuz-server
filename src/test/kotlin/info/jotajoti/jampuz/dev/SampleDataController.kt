@@ -133,6 +133,7 @@ class SampleDataController(
                     location = location,
                     code = JidCode.random(),
                     year = LocalDate.now().minusYears(yearOffset.toLong()).year,
+                    active = yearOffset == 0, // Only most recent is active
                     participants = emptyList(),
                 ).toList()
             }
