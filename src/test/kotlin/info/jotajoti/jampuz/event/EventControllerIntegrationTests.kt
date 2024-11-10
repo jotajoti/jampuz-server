@@ -98,7 +98,7 @@ class EventControllerIntegrationTests : GraphQLIntegrationTests() {
 
             val variables = mutableListOf<Pair<String, Any>>()
             variables.add("eventId" to testEvent.id!!)
-            variables.addIfValueNotNull("eventCode" to code)
+            variables.addIfValueNotNull("code" to code)
             variables.addIfValueNotNull("year" to year)
             variables.addIfValueNotNull("active" to active)
 
