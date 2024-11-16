@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21.0.5_11-jre-alpine
 
 RUN apk --no-cache add curl
 
