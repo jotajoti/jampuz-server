@@ -46,18 +46,18 @@ class SecurityController(
 
     @QueryMapping
     fun authenticatedParticipant(
-        @Argument locationCode: JidCode?,
+        @Argument eventJidCode: JidCode?,
         @Argument year: Int?,
         authentication: Authentication
     ) = when (authentication) {
         is ParticipantAuthentication -> authentication.participant.takeIf {
-            locationCode == null || eventService.findByCode(locationCode, year)?.id == it.event.id
+            eventJidCode == null || eventService.findByCode(eventJidCode, year)?.id == it.event.id
         }
 
-        is AdminAuthentication -> locationCode?.let {
+        is AdminAuthentication -> eventJidCode?.let {
             participantService.findParticipantForAdmin(
                 authentication.admin,
-                locationCode,
+                eventJidCode,
                 year
             )
         }

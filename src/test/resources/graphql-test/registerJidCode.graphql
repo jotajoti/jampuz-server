@@ -1,0 +1,5 @@
+mutation RegisterJidCode($code: String!, $eventId: ID!) {
+    registerFoundJidCode(input: {code: $code, eventId: $eventId}) {
+        id
+    }
+}
