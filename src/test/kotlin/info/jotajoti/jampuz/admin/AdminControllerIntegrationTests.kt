@@ -12,7 +12,7 @@ class AdminControllerIntegrationTests : GraphQLIntegrationTests() {
             """
             mutation CreateAdmin {
                 createAdmin(
-                    input: { name: "Admin 1", email: "admin1@example.com", password: "admin123" }
+                    input: { name: "Admin 10", email: "admin10@example.com", password: "admin123" }
                 ) {
                     id
                 }
