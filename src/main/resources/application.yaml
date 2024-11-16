@@ -21,11 +21,6 @@ jwt:
   sharedSecret: change-me
   hours-valid: 168 # One week
 
-management:
-  tracing:
-    sampling:
-      probability: 1
-
 password:
   salt: $2a$09$/hJXJVlOfryvAa2s2ifKw.yei76MTsHlWCF0wqHkbUZ34rOZ0jtwy
 

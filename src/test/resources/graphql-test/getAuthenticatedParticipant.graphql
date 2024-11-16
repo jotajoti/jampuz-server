@@ -1,0 +1,8 @@
+query GetAuthenticatedParticipant($eventJidCode: String, $year: Int) {
+    authenticatedParticipant(eventJidCode: $eventJidCode, year: $year) {
+        id
+        admin {
+            id
+        }
+    }
+}
