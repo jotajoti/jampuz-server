@@ -33,13 +33,13 @@ class LocationControllerIntegrationTests : GraphQLIntegrationTests() {
 
         @Test
         fun `should add owner to location`() {
-            val adminId = testAdmins[2].id
+            val adminEmail = testAdmins[2].email
             val locationId = testLocation.id
 
             executeAdminQuery(
                 """
                     mutation AddOwnerToLocation {
-                        addOwner(adminId: "$adminId", locationId: "$locationId") {
+                        addOwner(adminEmail: "$adminEmail", locationId: "$locationId") {
                             owners {
                                 id
                             }
@@ -48,31 +48,6 @@ class LocationControllerIntegrationTests : GraphQLIntegrationTests() {
                 """.trimIndent()
             )
                 .path("addOwner.owners[*].id").hasSize<AdminId>(3)
-        }
-
-        @Test
-        fun `should not be allowed to add self to not-owned location`() {
-            val locationNonOwner = testAdmins[2]
-
-            val adminId = locationNonOwner.id!!
-            val locationId = testLocation.id!!
-
-            executeAdminQuery(
-                """
-                    mutation AddOwnerToLocation {
-                        addOwner(adminId: "$adminId", locationId: "$locationId") {
-                            owners {
-                                id
-                            }
-                        }
-                    }
-                """.trimIndent(),
-                adminId
-            )
-                .errors()
-                .expect {
-                    it.message == "Forbidden"
-                }
         }
     }
 

@@ -46,9 +46,9 @@ class LocationController(
     @MutationMapping
     fun addOwner(
         @Argument locationId: LocationId,
-        @Argument adminId: AdminId,
+        @Argument adminEmail: String,
         adminAuthentication: AdminAuthentication,
-    ) = locationService.addOwner(locationId, adminId, adminAuthentication)
+    ) = locationService.addOwner(locationId, adminEmail, adminAuthentication)
 
     @IsOwnerOfLocation
     @MutationMapping
