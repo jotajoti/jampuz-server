@@ -28,7 +28,9 @@ samples:
   jid-codes: 5000
   locations: 2
   years-per-location: 10
-  max-found-jid-codes-per-participant: 250
   min-participants-per-location: 20
   max-participants-per-location: 90
   users: 10
+  found-jid-codes-for-participant-max: 200
+  found-jid-codes-for-participant-mean: 100
+  found-jid-codes-for-participant-std-dev: 50

@@ -13,13 +13,15 @@ data class SampleProperties(
     val minParticipantsPerLocation: Int = 1,
     val maxParticipantsPerLocation: Int = 1,
     val jidCodes: Int = 500,
-    val maxFoundJidCodesPerParticipant: Int = 1,
+    val foundJidCodesForParticipantMean: Double = 1.0,
+    val foundJidCodesForParticipantStdDev: Double = 1.0,
+    val foundJidCodesForParticipantMax: Int = 1,
 ) {
 
     fun randomNumberOfParticipants() = Random.nextInt(minParticipantsPerLocation..maxParticipantsPerLocation)
 
     fun randomNumberOfFoundJidCodes(): Int {
-        val randomValue = Random.nextGaussian(18.0, 6.0).roundToInt()
-        return minOf(maxOf(1, randomValue), maxFoundJidCodesPerParticipant)
+        val randomValue = Random.nextGaussian(foundJidCodesForParticipantMean, foundJidCodesForParticipantStdDev).roundToInt()
+        return minOf(maxOf(1, randomValue), foundJidCodesForParticipantMax)
     }
 }

@@ -21,21 +21,16 @@ class LocationService(
     fun createLocation(location: Location) =
         locationRepository.save(location)
 
-    fun addOwner(locationId: LocationId, adminId: AdminId, authentication: AdminAuthentication): Location? {
-        if (adminId == authentication.admin.id) {
+    fun addOwner(locationId: LocationId, adminEmail: String, authentication: AdminAuthentication): Location? {
+        val admin = adminRepository.findOneByEmail(adminEmail) ?: throw AdminNotFoundException()
+
+        if (admin.id == authentication.admin.id) {
             throw CannotAddSelfToLocationException()
         }
 
         return locationRepository
             .findByIdOrNull(locationId)
             ?.let { location ->
-                location to adminRepository.findByIdOrNull(adminId)
-            }
-            ?.takeIf { it.second != null }
-            ?.let {
-                val location = it.first
-                val admin = it.second!!
-
                 location.owners += admin
 
                 locationRepository.save(location)
@@ -61,6 +56,9 @@ class LocationService(
 
 class AdminNotInLocationException :
     ErrorCodeException("Admin not part of location", ADMIN_NOT_IN_LOCATION, FORBIDDEN)
+
+class AdminNotFoundException :
+    ErrorCodeException("Admin not found", ADMIN_NOT_FOUND, NOT_FOUND)
 
 class CannotAddSelfToLocationException :
     ErrorCodeException("Cannot add yourself to a location", CANNOT_ADD_SELF_TO_LOCATION, FORBIDDEN)
