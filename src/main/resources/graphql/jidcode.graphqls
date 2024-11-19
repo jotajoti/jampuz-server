@@ -9,10 +9,10 @@ enum Region {
 }
 
 type JidCode {
-    value: String!
-    region: Region!
+    value: String! @Cost(value: 1)
+    region: Region! @Cost(value: 1)
     # A lowercase [ISO3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code
-    country: String!
+    country: String! @Cost(value: 1)
 }
 
 type JidCodeStats {
@@ -20,10 +20,10 @@ type JidCodeStats {
     count: Int!
     uniqueCount: Int!
     uniqueCountryCount: Int!
-    countryStats: [CountryStat!]!
-    uniqueCountries: [String!]!
+    countryStats: [CountryStat!]! @Cost(value: 1)
+    uniqueCountries: [String!]! @Cost(value: 1)
     uniqueRegionCount: Int!
-    uniqueRegions: [Region!]!
+    uniqueRegions: [Region!]! @Cost(value: 1)
 }
 
 type CountryStat {
@@ -34,9 +34,9 @@ type CountryStat {
 }
 
 extend type Participant {
-    jidCodeStats: JidCodeStats!
+    jidCodeStats: JidCodeStats! @Cost(value: 10)
 }
 
 extend type Event {
-    jidCodeStats: JidCodeStats!
+    jidCodeStats: JidCodeStats! @Cost(value: 10)
 }

@@ -3,13 +3,13 @@ type Event {
     code: JidCode!
     year: Int!
     active: Boolean!
-    location: Location!
+    location: Location! @Cost(value: 5)
     # Returns true if event is latest for the location
-    isLatest: Boolean!
+    isLatest: Boolean! @Cost(value: 5)
     # Return previous year's event
-    previous: Event
+    previous: Event @Cost(value: 5)
     # Return next year's event
-    next: Event
+    next: Event @Cost(value: 5)
 }
 
 input CreateEventInput {
@@ -27,18 +27,18 @@ input UpdateEventInput {
 }
 
 extend type Location {
-    events: [Event!]!
-    latestEvent: Event
+    events: [Event!]! @Cost(value: 10)
+    latestEvent: Event @Cost(value: 5)
 }
 
 extend type Query {
     # If no year is provided the latest event is taken
     # Can be loaded without authentication
-    event(code: String!, year: Int): Event
+    event(code: String!, year: Int): Event @Cost(value: 5)
 
     # Load specific event by ID.
     # Requires admin authentication
-    eventById(eventId: ID!): Event
+    eventById(eventId: ID!): Event @Cost(value: 5)
 }
 
 extend type Mutation {
