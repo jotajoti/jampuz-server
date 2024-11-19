@@ -6,4 +6,4 @@ COPY target/*.jar /app/jampuz-server.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app/jampuz-server.jar"]
+ENTRYPOINT ["java","-Dspring.aot.enabled=true","-jar","/app/jampuz-server.jar"]
