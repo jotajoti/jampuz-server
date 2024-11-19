@@ -2,6 +2,7 @@ package info.jotajoti.jampuz
 
 import graphql.scalars.*
 import info.jotajoti.jampuz.event.*
+import info.jotajoti.jampuz.graphql.*
 import info.jotajoti.jampuz.jidcode.*
 import info.jotajoti.jampuz.security.*
 import org.springframework.aot.hint.annotation.*
@@ -24,6 +25,7 @@ class GraphQlConfig {
     fun runtimeWiringConfigurer() =
         RuntimeWiringConfigurer { wiringBuilder ->
             wiringBuilder.scalar(ExtendedScalars.Date)
+            wiringBuilder.registerCostDirective()
         }
 }
 

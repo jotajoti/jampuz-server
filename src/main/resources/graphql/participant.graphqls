@@ -1,18 +1,18 @@
 type Participant {
-    id: ID!
-    name: String!
+    id: ID! @Cost(value: 1)
+    name: String! @Cost(value: 1)
     # Pin code is only set if authenticated user is participant itself or an owner on the location
-    pinCode: String
+    pinCode: String @Cost(value: 1)
     # If not null, means this participant is linked to the Admin user so the admin also can act as participant.
-    admin: Admin
-    event: Event!
-    foundJidCodes: [FoundJidCode!]
+    admin: Admin @Cost(value: 5)
+    event: Event! @Cost(value: 5)
+    foundJidCodes: [FoundJidCode!] @Cost(value: 5)
 }
 
 type FoundJidCode {
-    id: ID!
-    code: JidCode!
-    participant: Participant!
+    id: ID! @Cost(value: 1)
+    code: JidCode! @Cost(value: 1)
+    participant: Participant! @Cost(value: 5)
 }
 
 input CreateParticipantInput {
@@ -26,7 +26,7 @@ input RegisterFoundJidCode {
 }
 
 extend type Event {
-    participants: [Participant!]!
+    participants: [Participant!]! @Cost(value: 5)
 }
 
 extend type Mutation {
@@ -40,5 +40,5 @@ extend type Query {
     # Return null if not authenticated or if authentication is not a participant
     # If eventJidCode is provided it will only return participant if the authenticated
     # participant is associated with the event
-    authenticatedParticipant(eventJidCode: String, year: Int): Participant
+    authenticatedParticipant(eventJidCode: String, year: Int): Participant @Cost(value: 1)
 }

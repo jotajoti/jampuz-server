@@ -1,7 +1,7 @@
 type Location {
     id: ID!
     name: String!
-    owners: [Admin!]
+    owners: [Admin!] @Cost(value: 3)
 }
 
 input CreateLocationInput {
@@ -10,9 +10,9 @@ input CreateLocationInput {
 
 extend type Query {
     # Only returns locations owned by authenticated admin
-    locations: [Location!]
+    locations: [Location!] @Cost(value: 10)
     # Only returns location if owned by authenticated admin
-    location(locationId: ID!): Location
+    location(locationId: ID!): Location @Cost(value: 5)
 }
 
 extend type Mutation {
